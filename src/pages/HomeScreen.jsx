@@ -1,15 +1,20 @@
-import { useState } from 'react'
+import { Fragment, useLayoutEffect, useRef, useState } from 'react'
 import logo from '../assets/header-logo.svg'
 import CategoryChip from '../components/CategoryChip.jsx'
 import CameraButton from '../components/CameraButton.jsx'
 import CategorySheet from '../components/CategorySheet.jsx'
-import { categories, product } from '../data/categories.js'
+import { categories } from '../data/categories.js'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
-const INGREDIENTS_TEXT =
-  'שוקולד חלב מעולה, סירופ גלוקוזה, קמח חיטה (גלוטן), סוכר לבן, שמנים ושומנים מהצומח, מים, אבקת חלב, קמח סויה, מלח, מתחלבים (לציטין לפתית, E-471), ונילין, מתפיחים (E-503ii, E-500ii), חומרי טעם וריח, אנזים (פרוטאינזה).'
+const LANGUAGES = [
+  { code: 'ar', label: 'عربي', dir: 'rtl' },
+  { code: 'en', label: 'English', dir: 'ltr' },
+  { code: 'he', label: 'עברית', dir: 'rtl' },
+]
 
 function breakAfter(text, marker) {
+  if (!marker) return [text, null]
   const cut = text.indexOf(marker)
   if (cut === -1) return [text, null]
   const splitAt = cut + marker.length
@@ -18,12 +23,22 @@ function breakAfter(text, marker) {
 
 export default function HomeScreen() {
   const [ingredientsOpen, setIngredientsOpen] = useState(false)
-  const [nameStart, nameRest] = breakAfter(product.name, 'קרמל')
+  const { language, setLanguage, t } = useLanguage()
+  const [nameStart, nameRest] = breakAfter(t.productName, t.productNameBreakAfter)
+  const buttonRefs = useRef({})
+  const [underline, setUnderline] = useState({ left: 0, width: 0 })
+
+  useLayoutEffect(() => {
+    const activeButton = buttonRefs.current[language]
+    if (activeButton) {
+      setUnderline({ left: activeButton.offsetLeft, width: activeButton.offsetWidth })
+    }
+  }, [language])
 
   return (
     <div className="home-screen">
       <header className="home-screen__header">
-        <img src={logo} alt="קריא למאכל" className="home-screen__logo" />
+        <img src={logo} alt={t.logoAlt} className="home-screen__logo" />
       </header>
 
       <div className="product-banner-group">
@@ -34,7 +49,9 @@ export default function HomeScreen() {
             {nameRest}
           </p>
         </div>
-        <p className="weight-badge">משקל נקי כולל: {product.netWeight}</p>
+        <p className="weight-badge">
+          {t.weightLabel}: <strong className="weight-badge__value">{t.weightValue}</strong>
+        </p>
       </div>
 
       <div className="category-grid">
@@ -42,6 +59,7 @@ export default function HomeScreen() {
           <CategoryChip
             key={category.id}
             {...category}
+            label={t.categories[category.id]}
             onClick={category.id === 'ingredients' ? () => setIngredientsOpen(true) : undefined}
           />
         ))}
@@ -52,22 +70,29 @@ export default function HomeScreen() {
       <CategorySheet
         open={ingredientsOpen}
         onClose={() => setIngredientsOpen(false)}
-        title="רכיבים"
-        bodyText={INGREDIENTS_TEXT}
+        title={t.ingredientsTitle}
+        bodyText={t.ingredientsText}
       />
 
-      <footer className="language-switcher">
-        <a href="#" lang="he" dir="rtl" className="language-switcher__active">
-          עברית
-        </a>
-        <span aria-hidden="true">|</span>
-        <a href="#" lang="en" dir="ltr">
-          English
-        </a>
-        <span aria-hidden="true">|</span>
-        <a href="#" lang="ar" dir="rtl">
-          عربي
-        </a>
+      <footer className="language-switcher" dir="ltr">
+        {LANGUAGES.map(({ code, label, dir }, index) => (
+          <Fragment key={code}>
+            {index > 0 && <span aria-hidden="true">|</span>}
+            <button
+              ref={(el) => {
+                buttonRefs.current[code] = el
+              }}
+              type="button"
+              lang={code}
+              dir={dir}
+              className={language === code ? 'language-switcher__active' : undefined}
+              onClick={() => setLanguage(code)}
+            >
+              {label}
+            </button>
+          </Fragment>
+        ))}
+        <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
       </footer>
     </div>
   )

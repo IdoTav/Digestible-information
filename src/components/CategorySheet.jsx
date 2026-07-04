@@ -3,6 +3,7 @@ import contrastInner from '../assets/icons/sheet/contrast-inner.svg'
 import volumeSpeaker from '../assets/icons/sheet/volume-speaker.svg'
 import volumeWave1 from '../assets/icons/sheet/volume-wave1.svg'
 import volumeWave2 from '../assets/icons/sheet/volume-wave2.svg'
+import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './CategorySheet.css'
 
 const CLOSE_THRESHOLD = 120
@@ -24,15 +25,16 @@ function getVoicesAsync() {
   })
 }
 
-function pickBestHebrewVoice(voices) {
-  const hebrew = voices.filter((v) => v.lang?.toLowerCase().startsWith('he'))
-  if (hebrew.length === 0) return null
+function pickBestVoice(voices, langPrefix) {
+  const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
+  if (matches.length === 0) return null
   // Network-backed voices (localService: false) are typically higher quality
   // than the device's built-in offline voice.
-  return hebrew.find((v) => !v.localService) || hebrew[0]
+  return matches.find((v) => !v.localService) || matches[0]
 }
 
 export default function CategorySheet({ open, onClose, title, bodyText }) {
+  const { t } = useLanguage()
   const [dragY, setDragY] = useState(0)
   const [dragging, setDragging] = useState(false)
   const [fontStep, setFontStep] = useState(0)
@@ -57,10 +59,10 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
       return
     }
     const voices = await getVoicesAsync()
-    const voice = pickBestHebrewVoice(voices)
+    const voice = pickBestVoice(voices, t.speechLang.split('-')[0])
 
     const utterance = new SpeechSynthesisUtterance(bodyText)
-    utterance.lang = 'he-IL'
+    utterance.lang = t.speechLang
     utterance.rate = 0.92
     if (voice) utterance.voice = voice
     utterance.onend = () => setSpeaking(false)
@@ -129,7 +131,7 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
                 <span className="contrast-icon__fill" />
               </span>
             </span>
-            <span className="category-sheet__control-label">ניגודיות</span>
+            <span className="category-sheet__control-label">{t.contrast}</span>
           </button>
 
           <div className="category-sheet__font-toggle">
@@ -138,9 +140,9 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
               className="category-sheet__font-btn"
               onClick={() => setFontStep((s) => Math.max(MIN_FONT_STEP, s - 1))}
               disabled={fontStep <= MIN_FONT_STEP}
-              aria-label="הקטן טקסט"
+              aria-label={t.shrinkText}
             >
-              א-
+              {t.fontGlyph}-
             </button>
             <span className="category-sheet__font-toggle-divider" />
             <button
@@ -148,9 +150,9 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
               className="category-sheet__font-btn"
               onClick={() => setFontStep((s) => Math.min(MAX_FONT_STEP, s + 1))}
               disabled={fontStep >= MAX_FONT_STEP}
-              aria-label="הגדל טקסט"
+              aria-label={t.growText}
             >
-              א+
+              {t.fontGlyph}+
             </button>
           </div>
 
@@ -167,7 +169,7 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
                 <img src={volumeWave2} alt="" className="volume-icon__wave2" />
               </span>
             </span>
-            <span className="category-sheet__control-label">{speaking ? 'מקריא...' : 'השמעה'}</span>
+            <span className="category-sheet__control-label">{speaking ? t.listening : t.listen}</span>
           </button>
         </div>
 

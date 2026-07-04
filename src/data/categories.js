@@ -8,17 +8,12 @@ import recyclingIcon from '../assets/icons/recycling.svg'
 import warningsIcon from '../assets/icons/warnings.svg'
 
 export const categories = [
-  { id: 'ingredients', label: 'רכיבים', icon: ingredientsIcon, color: '#43AA49' },
-  { id: 'allergens', label: 'אלרגנים', icon: allergensIcon, color: '#DE0405' },
-  { id: 'kosher', label: 'כשרות', icon: kosherIcon, color: '#44157A' },
-  { id: 'nutrition', label: 'סימון תזונתי ל- 100 גרם', icon: nutritionIcon, color: '#F5851F' },
-  { id: 'storage', label: 'הוראות אחסון', icon: storageIcon, color: '#2FB0E9' },
-  { id: 'manufacturer', label: 'יצרן/יבואן/משווק/אחסון', icon: manufacturerIcon, color: '#29256A' },
-  { id: 'warnings', label: 'אזהרות', icon: warningsIcon, color: '#DE0405' },
-  { id: 'recycling', label: 'מיחזור', icon: recyclingIcon, color: '#7E4836' },
+  { id: 'ingredients', icon: ingredientsIcon, color: '#43AA49' },
+  { id: 'allergens', icon: allergensIcon, color: '#DE0405' },
+  { id: 'kosher', icon: kosherIcon, color: '#44157A' },
+  { id: 'nutrition', icon: nutritionIcon, color: '#F5851F' },
+  { id: 'storage', icon: storageIcon, color: '#2FB0E9' },
+  { id: 'manufacturer', icon: manufacturerIcon, color: '#29256A' },
+  { id: 'warnings', icon: warningsIcon, color: '#DE0405' },
+  { id: 'recycling', icon: recyclingIcon, color: '#7E4836' },
 ]
-
-export const product = {
-  name: 'חטיף ווופל עם קרם קרמל מצופה שוקולד חלב מעולה',
-  netWeight: "30 גר'",
-}
