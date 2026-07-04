@@ -20,6 +20,16 @@ export const translations = {
     ingredientsTitle: 'רכיבים',
     ingredientsText:
       'שוקולד חלב מעולה, סירופ גלוקוזה, קמח חיטה (גלוטן), סוכר לבן, שמנים ושומנים מהצומח, מים, אבקת חלב, קמח סויה, מלח, מתחלבים (לציטין לפתית, E-471), ונילין, מתפיחים (E-503ii, E-500ii), חומרי טעם וריח, אנזים (פרוטאינזה).',
+    allergensIntro: 'המוצר מכיל:',
+    allergenLabels: {
+      sesame: 'שומשום',
+      soy: 'סויה',
+      gluten: 'גלוטן',
+      eggs: 'ביצים',
+      nuts: 'אגוזים',
+      milk: 'חלב',
+      peanuts: 'בוטנים',
+    },
     categories: {
       ingredients: 'רכיבים',
       allergens: 'אלרגנים',
@@ -51,6 +61,16 @@ export const translations = {
     ingredientsTitle: 'Ingredients',
     ingredientsText:
       'Premium milk chocolate, glucose syrup, wheat flour (gluten), white sugar, vegetable oils and fats, water, milk powder, soy flour, salt, emulsifiers (soy lecithin, E-471), vanillin, raising agents (E-503ii, E-500ii), flavorings, enzyme (protease).',
+    allergensIntro: 'Contains:',
+    allergenLabels: {
+      sesame: 'Sesame',
+      soy: 'Soy',
+      gluten: 'Gluten',
+      eggs: 'Eggs',
+      nuts: 'Nuts',
+      milk: 'Milk',
+      peanuts: 'Peanuts',
+    },
     categories: {
       ingredients: 'Ingredients',
       allergens: 'Allergens',
@@ -81,6 +101,16 @@ export const translations = {
     ingredientsTitle: 'المكونات',
     ingredientsText:
       'شوكولاتة حليب فاخرة، شراب الجلوكوز، دقيق القمح (غلوتين)، سكر أبيض، زيوت ودهون نباتية، ماء، مسحوق حليب، دقيق الصويا، ملح، مستحلبات (ليسيثين الصويا، E-471)، فانيلين، عوامل تخمير (E-503ii، E-500ii)، منكهات، إنزيم (بروتياز).',
+    allergensIntro: 'يحتوي على:',
+    allergenLabels: {
+      sesame: 'سمسم',
+      soy: 'صويا',
+      gluten: 'غلوتين',
+      eggs: 'بيض',
+      nuts: 'مكسرات',
+      milk: 'حليب',
+      peanuts: 'فول سوداني',
+    },
     categories: {
       ingredients: 'المكونات',
       allergens: 'مسببات الحساسية',

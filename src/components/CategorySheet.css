@@ -230,3 +230,39 @@
   text-align: start;
   transition: color 0.25s ease;
 }
+
+.category-sheet__body p.category-sheet__body-heading {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.category-sheet__icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px 18px;
+  padding-top: 6px;
+}
+
+.category-sheet__icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 76px;
+  min-height: 76px;
+}
+
+.category-sheet__icon-item-img {
+  display: block;
+  transition: width 0.15s ease, height 0.15s ease;
+}
+
+.category-sheet__icon-item-label {
+  color: #ea2427;
+  font-weight: 600;
+  text-align: center;
+  transition: font-size 0.15s ease;
+}

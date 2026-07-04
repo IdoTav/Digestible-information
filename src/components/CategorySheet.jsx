@@ -20,15 +20,16 @@ function pickBestVoice(voices, langPrefix) {
   return matches.find((v) => !v.localService) || matches[0]
 }
 
-export default function CategorySheet({ open, onClose, title, bodyText }) {
+export default function CategorySheet({ open, onClose, title, bodyHeading, bodyHeadingColor, bodyText, bodyIcons }) {
   const { t } = useLanguage()
   const [dragY, setDragY] = useState(0)
   const [dragging, setDragging] = useState(false)
-  const [fontStep, setFontStep] = useState(0)
+  const [fontStep, setFontStep] = useState(-1)
   const [speaking, setSpeaking] = useState(false)
   const [highContrast, setHighContrast] = useState(false)
   const startY = useRef(0)
   const volumeIconFilter = highContrast !== speaking ? 'invert(1)' : 'none'
+  const iconScale = (BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE) / BASE_FONT_SIZE
 
   useEffect(() => {
     if (!open) {
@@ -59,7 +60,8 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
     }
     const voice = pickBestVoice(window.speechSynthesis.getVoices(), t.speechLang.split('-')[0])
 
-    const utterance = new SpeechSynthesisUtterance(bodyText)
+    const spokenBody = bodyIcons ? bodyIcons.map((item) => item.label).join(', ') : bodyText
+    const utterance = new SpeechSynthesisUtterance(bodyHeading ? `${bodyHeading} ${spokenBody}` : spokenBody)
     utterance.lang = t.speechLang
     utterance.rate = 0.92
     if (voice) utterance.voice = voice
@@ -172,7 +174,36 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
         </div>
 
         <div className="category-sheet__body">
-          <p style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}>{bodyText}</p>
+          {bodyHeading && (
+            <p
+              className="category-sheet__body-heading"
+              style={{ fontSize: `${BASE_FONT_SIZE + 4 + fontStep * FONT_STEP_SIZE}px`, color: bodyHeadingColor }}
+            >
+              {bodyHeading}
+            </p>
+          )}
+          {bodyIcons ? (
+            <div className="category-sheet__icon-grid">
+              {bodyIcons.map((item) => (
+                <div key={item.id} className="category-sheet__icon-item">
+                  <img
+                    src={item.icon}
+                    alt=""
+                    className="category-sheet__icon-item-img"
+                    style={{ width: `${item.width * iconScale}px`, height: `${item.height * iconScale}px` }}
+                  />
+                  <span
+                    className="category-sheet__icon-item-label"
+                    style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}
+                  >
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}>{bodyText}</p>
+          )}
         </div>
       </div>
     </>

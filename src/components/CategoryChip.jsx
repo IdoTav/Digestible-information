@@ -21,7 +21,7 @@ export default function CategoryChip({ id, label, icon, color, onClick }) {
         dir={dir}
         onClick={handleClick}
       >
-        <img src={icon} alt="" className="category-chip__icon" aria-hidden="true" />
+        <img src={icon} alt="" className={`category-chip__icon category-chip__icon--${id}`} aria-hidden="true" />
         <span className="category-chip__label">{label.replaceAll('/', '/​')}</span>
         <span className="category-chip__tab">
           <ChevronUp size={16} className="category-chip__chevron" aria-hidden="true" />

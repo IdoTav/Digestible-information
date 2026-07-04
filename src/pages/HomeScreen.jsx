@@ -4,6 +4,7 @@ import CategoryChip from '../components/CategoryChip.jsx'
 import CameraButton from '../components/CameraButton.jsx'
 import CategorySheet from '../components/CategorySheet.jsx'
 import { categories } from '../data/categories.js'
+import { allergenIcons } from '../data/allergenIcons.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
@@ -21,8 +22,10 @@ function breakAfter(text, marker) {
   return [text.slice(0, splitAt), text.slice(splitAt).trimStart()]
 }
 
+const SHEET_CATEGORIES = new Set(['ingredients', 'allergens'])
+
 export default function HomeScreen() {
-  const [ingredientsOpen, setIngredientsOpen] = useState(false)
+  const [openSheet, setOpenSheet] = useState(null)
   const { language, setLanguage, t } = useLanguage()
   const [nameStart, nameRest] = breakAfter(t.productName, t.productNameBreakAfter)
   const buttonRefs = useRef({})
@@ -60,7 +63,7 @@ export default function HomeScreen() {
             key={category.id}
             {...category}
             label={t.categories[category.id]}
-            onClick={category.id === 'ingredients' ? () => setIngredientsOpen(true) : undefined}
+            onClick={SHEET_CATEGORIES.has(category.id) ? () => setOpenSheet(category.id) : undefined}
           />
         ))}
       </div>
@@ -68,10 +71,19 @@ export default function HomeScreen() {
       <CameraButton />
 
       <CategorySheet
-        open={ingredientsOpen}
-        onClose={() => setIngredientsOpen(false)}
+        open={openSheet === 'ingredients'}
+        onClose={() => setOpenSheet(null)}
         title={t.ingredientsTitle}
         bodyText={t.ingredientsText}
+      />
+
+      <CategorySheet
+        open={openSheet === 'allergens'}
+        onClose={() => setOpenSheet(null)}
+        title={t.categories.allergens}
+        bodyHeading={t.allergensIntro}
+        bodyHeadingColor="#EA2427"
+        bodyIcons={allergenIcons.map((item) => ({ ...item, label: t.allergenLabels[item.id] }))}
       />
 
       <footer className="language-switcher" dir="ltr">
