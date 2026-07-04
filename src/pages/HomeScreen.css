@@ -33,7 +33,7 @@
   background: #1c1c1e;
   color: #ffffff;
   border-radius: 12px;
-  padding: 12px 14px 32px;
+  padding: 12px 14px 13px;
   text-align: center;
 }
 
@@ -72,6 +72,7 @@
 .language-switcher {
   position: relative;
   margin-top: auto;
+  margin-bottom: 28px;
   align-self: center;
   display: flex;
   align-items: center;

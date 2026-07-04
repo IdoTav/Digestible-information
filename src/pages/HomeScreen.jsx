@@ -54,7 +54,7 @@ export default function HomeScreen() {
         </p>
       </div>
 
-      <div className="category-grid">
+      <div className="category-grid" dir="rtl">
         {categories.map((category) => (
           <CategoryChip
             key={category.id}

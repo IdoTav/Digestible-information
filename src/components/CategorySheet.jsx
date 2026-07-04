@@ -12,19 +12,6 @@ const MAX_FONT_STEP = 3
 const BASE_FONT_SIZE = 18
 const FONT_STEP_SIZE = 3
 
-function getVoicesAsync() {
-  return new Promise((resolve) => {
-    const voices = window.speechSynthesis.getVoices()
-    if (voices.length) {
-      resolve(voices)
-      return
-    }
-    window.speechSynthesis.onvoiceschanged = () => {
-      resolve(window.speechSynthesis.getVoices())
-    }
-  })
-}
-
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
   if (matches.length === 0) return null
@@ -52,14 +39,25 @@ export default function CategorySheet({ open, onClose, title, bodyText }) {
 
   useEffect(() => () => window.speechSynthesis.cancel(), [])
 
-  const handleToggleSpeech = async () => {
+  // Warm up the voice list ahead of time. speechSynthesis.getVoices() is empty
+  // on first use until the browser loads it asynchronously (voiceschanged), and
+  // speak() must be called synchronously inside the click handler to count as
+  // user-triggered — awaiting the voice list inside the click handler pushes
+  // speak() past that window, so the first click silently does nothing.
+  useEffect(() => {
+    window.speechSynthesis.getVoices()
+    const warmUp = () => window.speechSynthesis.getVoices()
+    window.speechSynthesis.addEventListener('voiceschanged', warmUp)
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', warmUp)
+  }, [])
+
+  const handleToggleSpeech = () => {
     if (speaking) {
       window.speechSynthesis.cancel()
       setSpeaking(false)
       return
     }
-    const voices = await getVoicesAsync()
-    const voice = pickBestVoice(voices, t.speechLang.split('-')[0])
+    const voice = pickBestVoice(window.speechSynthesis.getVoices(), t.speechLang.split('-')[0])
 
     const utterance = new SpeechSynthesisUtterance(bodyText)
     utterance.lang = t.speechLang
