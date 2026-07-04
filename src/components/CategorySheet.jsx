@@ -24,7 +24,7 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
   const { t } = useLanguage()
   const [dragY, setDragY] = useState(0)
   const [dragging, setDragging] = useState(false)
-  const [fontStep, setFontStep] = useState(-1)
+  const [fontStep, setFontStep] = useState(0)
   const [speaking, setSpeaking] = useState(false)
   const [highContrast, setHighContrast] = useState(false)
   const startY = useRef(0)
