@@ -71,14 +71,12 @@
 
 .language-switcher {
   position: relative;
-  margin-top: auto;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
   align-self: center;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 16px 10px;
-  border: 1.5px solid #29256a;
   border-radius: 10px;
   font-size: 14px;
   color: #1c1c28;

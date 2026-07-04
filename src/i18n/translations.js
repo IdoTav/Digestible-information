@@ -26,7 +26,7 @@ export const translations = {
       kosher: 'כשרות',
       nutrition: 'סימון תזונתי ל- 100 גרם',
       storage: 'הוראות אחסון',
-      manufacturer: 'יצרן/יבואן/משווק/אחסון',
+      manufacturer: 'יצרן/יבואן/משווק/אורז',
       warnings: 'אזהרות',
       recycling: 'מיחזור',
     },

@@ -227,6 +227,6 @@
   font-size: 18px;
   line-height: 1.7;
   color: var(--sheet-fg);
-  text-align: right;
+  text-align: start;
   transition: color 0.25s ease;
 }
