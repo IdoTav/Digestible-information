@@ -9,8 +9,16 @@ import './HomeScreen.css'
 const INGREDIENTS_TEXT =
   'שוקולד חלב מעולה, סירופ גלוקוזה, קמח חיטה (גלוטן), סוכר לבן, שמנים ושומנים מהצומח, מים, אבקת חלב, קמח סויה, מלח, מתחלבים (לציטין לפתית, E-471), ונילין, מתפיחים (E-503ii, E-500ii), חומרי טעם וריח, אנזים (פרוטאינזה).'
 
+function breakAfter(text, marker) {
+  const cut = text.indexOf(marker)
+  if (cut === -1) return [text, null]
+  const splitAt = cut + marker.length
+  return [text.slice(0, splitAt), text.slice(splitAt).trimStart()]
+}
+
 export default function HomeScreen() {
   const [ingredientsOpen, setIngredientsOpen] = useState(false)
+  const [nameStart, nameRest] = breakAfter(product.name, 'קרמל')
 
   return (
     <div className="home-screen">
@@ -20,7 +28,11 @@ export default function HomeScreen() {
 
       <div className="product-banner-group">
         <div className="product-banner">
-          <p className="product-banner__name">{product.name}</p>
+          <p className="product-banner__name">
+            {nameStart}
+            {nameRest && <br />}
+            {nameRest}
+          </p>
         </div>
         <p className="weight-badge">משקל נקי כולל: {product.netWeight}</p>
       </div>
