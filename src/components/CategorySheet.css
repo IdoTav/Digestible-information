@@ -1,0 +1,129 @@
+.category-sheet__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+  z-index: 1100;
+}
+
+.category-sheet__backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.category-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 34.38vh;
+  bottom: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08);
+  z-index: 1101;
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.category-sheet--open {
+  transform: translateY(0);
+}
+
+.category-sheet__handle-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px 16px;
+  touch-action: none;
+  cursor: grab;
+}
+
+.category-sheet__handle {
+  width: 40px;
+  height: 5px;
+  border-radius: 100px;
+  background: #d9d9d9;
+  margin-bottom: 18px;
+}
+
+.category-sheet__title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #000;
+  text-align: center;
+}
+
+.category-sheet__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 24px 20px;
+}
+
+.category-sheet__control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #000;
+}
+
+.category-sheet__control-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid #000;
+}
+
+.category-sheet__control-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.category-sheet__font-toggle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 2.5px solid #000;
+  border-radius: 14px;
+  padding: 8px 18px;
+  background: none;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000;
+}
+
+.category-sheet__font-toggle-divider {
+  width: 1.5px;
+  height: 22px;
+  background: #000;
+}
+
+.category-sheet__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 24px 32px;
+}
+
+.category-sheet__body p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #000;
+  text-align: right;
+}
