@@ -20,7 +20,7 @@ export const translations = {
     shrinkText: 'הקטן טקסט',
     growText: 'הגדל טקסט',
     speechLang: 'he-IL',
-    ingredientsTitle: 'רכיבים',
+    ingredientsTitle: 'רשימת רכיבים',
     ingredientsText:
       'שוקולד חלב מעולה, סירופ גלוקוזה, קמח חיטה (גלוטן), סוכר לבן, שמנים ושומנים מהצומח, מים, אבקת חלב, קמח סויה, מלח, מתחלבים (לציטין לפתית, E-471), ונילין, מתפיחים (E-503ii, E-500ii), חומרי טעם וריח, אנזים (פרוטאינזה).',
     allergensIntro: 'המוצר מכיל:',

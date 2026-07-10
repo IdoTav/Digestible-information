@@ -10,6 +10,7 @@ const CLOSE_THRESHOLD = 120
 const MIN_FONT_STEP = -3
 const MAX_FONT_STEP = 3
 const BASE_FONT_SIZE = 18
+const BODY_TEXT_BASE_FONT_SIZE = 20
 const FONT_STEP_SIZE = 3
 // Icon grid sizing is fluid (cqw, relative to .category-sheet__icon-grid's own width)
 // rather than fixed px, so the 4-column layout scales cleanly on any screen width
@@ -225,7 +226,7 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
                 ))}
             </div>
           ) : (
-            <p style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}>{bodyText}</p>
+            <p style={{ fontSize: `${BODY_TEXT_BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}>{bodyText}</p>
           )}
         </div>
       </div>
