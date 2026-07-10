@@ -242,27 +242,30 @@
 
 .category-sheet__icon-grid {
   container-type: inline-size;
-  display: grid;
-  /* 8 sub-columns (2 per visual column) so a partial 3-item second row can be
-     centered by offsetting its start by one sub-column — see :nth-child(5) below. */
-  grid-template-columns: repeat(8, 1fr);
-  justify-items: center;
-  gap: 6.5cqw 4.8cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 6.5cqw 0;
   padding-top: 6px;
 }
 
+.category-sheet__icon-row {
+  display: flex;
+  justify-content: center;
+  gap: 4.8cqw;
+}
+
 .category-sheet__icon-item {
-  grid-column: span 2;
+  /* Fixed to a "4 per row" slot width regardless of how many items are in this
+     particular row, so a partial row (e.g. 3 of 7 allergens) centers via the row's
+     own justify-content instead of stretching to fill — and icons stay the same
+     size across rows. */
+  flex: 0 0 calc((100% - 3 * 4.8cqw) / 4);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
   min-height: 76px;
-}
-
-.category-sheet__icon-item:nth-child(5) {
-  grid-column-start: 2;
 }
 
 .category-sheet__icon-item-img {

@@ -18,6 +18,10 @@ const FONT_STEP_SIZE = 3
 // regardless of its own aspect ratio (matching the Figma reference).
 const ICON_BUDGET_CQW = 15
 const LABEL_BASE_CQW = 4.6
+// Rendered as explicit rows (rather than one CSS grid) so a partial last row (e.g. 3
+// of 7 allergens) can be centered with plain flexbox justify-content — grid-column
+// line offsetting for this turned out not to center symmetrically under RTL.
+const ICONS_PER_ROW = 4
 
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
@@ -191,28 +195,34 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
           )}
           {bodyIcons ? (
             <div className="category-sheet__icon-grid">
-              {bodyIcons.map((item) => {
-                const iconBudgetCqw = (ICON_BUDGET_CQW / Math.max(item.width, item.height)) * iconScale
-                return (
-                  <div key={item.id} className="category-sheet__icon-item">
-                    <img
-                      src={item.icon}
-                      alt=""
-                      className="category-sheet__icon-item-img"
-                      style={{
-                        width: `${item.width * iconBudgetCqw}cqw`,
-                        height: `${item.height * iconBudgetCqw}cqw`,
-                      }}
-                    />
-                    <span
-                      className="category-sheet__icon-item-label"
-                      style={{ fontSize: `calc(${LABEL_BASE_CQW}cqw + ${fontStep * FONT_STEP_SIZE}px)` }}
-                    >
-                      {item.label}
-                    </span>
+              {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
+                .filter((row) => row.length > 0)
+                .map((row, rowIndex) => (
+                  <div key={rowIndex} className="category-sheet__icon-row">
+                    {row.map((item) => {
+                      const iconBudgetCqw = (ICON_BUDGET_CQW / Math.max(item.width, item.height)) * iconScale
+                      return (
+                        <div key={item.id} className="category-sheet__icon-item">
+                          <img
+                            src={item.icon}
+                            alt=""
+                            className="category-sheet__icon-item-img"
+                            style={{
+                              width: `${item.width * iconBudgetCqw}cqw`,
+                              height: `${item.height * iconBudgetCqw}cqw`,
+                            }}
+                          />
+                          <span
+                            className="category-sheet__icon-item-label"
+                            style={{ fontSize: `calc(${LABEL_BASE_CQW}cqw + ${fontStep * FONT_STEP_SIZE}px)` }}
+                          >
+                            {item.label}
+                          </span>
+                        </div>
+                      )
+                    })}
                   </div>
-                )
-              })}
+                ))}
             </div>
           ) : (
             <p style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}>{bodyText}</p>
