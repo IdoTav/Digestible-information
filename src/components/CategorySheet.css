@@ -426,7 +426,11 @@
   width: 1px;
   align-self: stretch;
   background: var(--sheet-fg);
-  margin: 0 1.5%;
+  /* Negative vertical margin bleeds past the table's own vertical padding, so
+     the line reaches the true top/bottom edges regardless of that padding
+     (percentage margins/padding both resolve against the container's width,
+     so -2.4% exactly cancels the table's 2.4% vertical padding). */
+  margin: -5% 1.5%;
   transition: background-color 0.25s ease;
 }
 
@@ -457,8 +461,8 @@
   font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
-  margin-bottom: 1.47cqw;
   transition: font-size 0.15s ease;
+  padding: 2.5cqw 0;
 }
 
 .category-sheet__sugar-box-icon-wrap {
@@ -467,7 +471,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 3.05cqw;
 }
 
 .category-sheet__sugar-box-divider {

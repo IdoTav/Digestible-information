@@ -44,7 +44,7 @@ const FACT_TABLE_FONT_SCALE = 0.7
 const FACT_TABLE_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * FACT_TABLE_FONT_SCALE
 const SUGAR_BOX_LABEL_FONT_SCALE = 0.8
 const SUGAR_BOX_LABEL_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * SUGAR_BOX_LABEL_FONT_SCALE
-const SUGAR_BOX_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW
+const SUGAR_BOX_VALUE_BASE_CQW = STAT_CARD_VALUE_BASE_CQW
 // transFat/cholesterol are sub-items of totalFat in the Figma reference (indented
 // under "סך השומנים"), so their labels get an extra inline-start margin.
 const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
