@@ -11,6 +11,13 @@ const MIN_FONT_STEP = -3
 const MAX_FONT_STEP = 3
 const BASE_FONT_SIZE = 18
 const FONT_STEP_SIZE = 3
+// Icon grid sizing is fluid (cqw, relative to .category-sheet__icon-grid's own width)
+// rather than fixed px, so the 4-column layout scales cleanly on any screen width
+// instead of staying a fixed native size. Each icon's larger native dimension is
+// normalized to this budget, keeping every allergen icon a similar visual footprint
+// regardless of its own aspect ratio (matching the Figma reference).
+const ICON_BUDGET_CQW = 15
+const LABEL_BASE_CQW = 4.6
 
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
@@ -184,22 +191,28 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
           )}
           {bodyIcons ? (
             <div className="category-sheet__icon-grid">
-              {bodyIcons.map((item) => (
-                <div key={item.id} className="category-sheet__icon-item">
-                  <img
-                    src={item.icon}
-                    alt=""
-                    className="category-sheet__icon-item-img"
-                    style={{ width: `${item.width * iconScale}px`, height: `${item.height * iconScale}px` }}
-                  />
-                  <span
-                    className="category-sheet__icon-item-label"
-                    style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-              ))}
+              {bodyIcons.map((item) => {
+                const iconBudgetCqw = (ICON_BUDGET_CQW / Math.max(item.width, item.height)) * iconScale
+                return (
+                  <div key={item.id} className="category-sheet__icon-item">
+                    <img
+                      src={item.icon}
+                      alt=""
+                      className="category-sheet__icon-item-img"
+                      style={{
+                        width: `${item.width * iconBudgetCqw}cqw`,
+                        height: `${item.height * iconBudgetCqw}cqw`,
+                      }}
+                    />
+                    <span
+                      className="category-sheet__icon-item-label"
+                      style={{ fontSize: `calc(${LABEL_BASE_CQW}cqw + ${fontStep * FONT_STEP_SIZE}px)` }}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           ) : (
             <p style={{ fontSize: `${BASE_FONT_SIZE + fontStep * FONT_STEP_SIZE}px` }}>{bodyText}</p>

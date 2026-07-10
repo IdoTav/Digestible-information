@@ -238,10 +238,11 @@
 }
 
 .category-sheet__icon-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 24px 18px;
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  gap: 6.5cqw 4.8cqw;
   padding-top: 6px;
 }
 
@@ -251,7 +252,6 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  width: 76px;
   min-height: 76px;
 }
 
