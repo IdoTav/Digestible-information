@@ -15,6 +15,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The home page never scrolls (see .home-screen-stage), so this only ever shows on
+   pages/panels that are allowed to scroll (e.g. CategoryPage, CategorySheet's body) —
+   visible rather than the mobile-default invisible overlay scrollbar, as a affordance
+   that there's more content below. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c7c7cc transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #c7c7cc;
+  border-radius: 3px;
+}
+
 a {
   color: inherit;
   text-decoration: none;
