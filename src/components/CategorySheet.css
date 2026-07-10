@@ -355,8 +355,8 @@
 }
 
 .category-sheet__stat-card-divider {
-  width: 70%;
-  height: 1px;
+  width: 100%;
+  height: 1.5px;
   background: currentColor;
   opacity: 0.9;
 }
@@ -378,6 +378,7 @@
   height: 31.02cqw;
   display: flex;
   align-items: stretch;
+  justify-content: space-between;
   background: var(--sheet-bg);
   border: 1px solid var(--sheet-fg);
   border-radius: 15px;
@@ -395,7 +396,21 @@
 }
 
 .category-sheet__fact-table-labels {
-  flex: 1;
+  position: relative;
+}
+
+/* Visually groups transFat/cholesterol as sub-items of totalFat (Figma's
+   Vector 9): a square bracket sitting just before the two indented rows. */
+.category-sheet__fact-table-sub-bracket {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 22%;
+  height: 36%;
+  width: 5px;
+  border-top: 1.5px solid var(--sheet-fg);
+  border-bottom: 1.5px solid var(--sheet-fg);
+  border-inline-start: 1.5px solid var(--sheet-fg);
+  opacity: 0.9;
 }
 
 .category-sheet__fact-table-labels span,
@@ -422,7 +437,7 @@
   background: #ff000e;
   border-radius: 14px;
   color: #fff;
-  padding: 0.5% 3%;
+  padding: 0.5% 0;
 }
 
 .category-sheet__sugar-box-col {
@@ -441,12 +456,14 @@
 .category-sheet__sugar-box-label {
   font-weight: 600;
   white-space: nowrap;
+  flex-shrink: 0;
   margin-bottom: 1.47cqw;
   transition: font-size 0.15s ease;
 }
 
 .category-sheet__sugar-box-icon-wrap {
   height: 11.08cqw;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -455,7 +472,8 @@
 
 .category-sheet__sugar-box-divider {
   width: 100%;
-  height: 1px;
+  height: 1.5px;
+  flex-shrink: 0;
   background: currentColor;
   opacity: 0.9;
   margin-bottom: 0.3cqw;

@@ -31,7 +31,6 @@ const ICONS_PER_ROW = 4
 const STAT_CARD_ICON_BUDGET_CQW = 12
 const STAT_CARD_LABEL_BASE_CQW = 3.6
 const STAT_CARD_VALUE_BASE_CQW = 4.6
-const STAT_CARD_UNIT_BASE_CQW = 3.2
 // Fact table + sugar box are sized directly off the Figma frame (393px wide iPhone
 // mockup, 16px side margins either side of the 361px-wide nutrition container), so
 // every px value below is that Figma px divided by 361 and multiplied by 100.
@@ -43,17 +42,29 @@ const FIGMA_PX_TO_CQW = 100 / 361
 // (Arabic's "إجمالي الكربوهيدرات" / "ملاعق صغيرة" run widest).
 const FACT_TABLE_FONT_SCALE = 0.7
 const FACT_TABLE_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * FACT_TABLE_FONT_SCALE
-const FACT_TABLE_UNIT_BASE_CQW = 16 * FIGMA_PX_TO_CQW * FACT_TABLE_FONT_SCALE
 const SUGAR_BOX_LABEL_FONT_SCALE = 0.54
 const SUGAR_BOX_LABEL_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * SUGAR_BOX_LABEL_FONT_SCALE
 const SUGAR_BOX_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW
 // transFat/cholesterol are sub-items of totalFat in the Figma reference (indented
 // under "סך השומנים"), so their labels get an extra inline-start margin.
 const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
-const SUGAR_BOX_UNIT_BASE_CQW = 14.76 * FIGMA_PX_TO_CQW
 
-function NutritionBody({ data, fontStep, iconScale, dir }) {
+function NutritionBody({ data, fontStep, iconScale, dir, approxPrefix }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
+
+  // The hidden prefix (כ-/حوالي-) sits inside the same LTR isolate as the amount,
+  // in the exact spot the visible "approx." prefix used to occupy — keeping the
+  // number-before-unit bidi resolution that prefix produced, without showing it.
+  const renderAmount = (amount, { skipPrefix = false } = {}) => (
+    <>
+      {'⁦'}
+      {!skipPrefix && approxPrefix && (
+        <span style={{ display: 'inline-block', width: 0, overflow: 'hidden' }}>{approxPrefix}</span>
+      )}
+      {amount}
+      {'⁩'}
+    </>
+  )
 
   return (
     <div className="category-sheet__nutrition">
@@ -70,9 +81,8 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
                   space the other two cards' real <img> icons occupy — nothing to render. */}
               <span className="category-sheet__stat-card-icon-wrap" aria-hidden="true" />
               <span className="category-sheet__stat-card-divider" />
-              <span className="category-sheet__stat-card-value">
-                <span style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>{card.value}</span>
-                {card.unit && <span style={{ fontSize: fontPx(STAT_CARD_UNIT_BASE_CQW) }}> {card.unit}</span>}
+              <span className="category-sheet__stat-card-value" style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>
+                {renderAmount(card.amount)}
               </span>
             </div>
           ) : (
@@ -92,9 +102,8 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
                 />
               </span>
               <span className="category-sheet__stat-card-divider" />
-              <span className="category-sheet__stat-card-value">
-                <span style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>{card.value}</span>
-                {card.unit && <span style={{ fontSize: fontPx(STAT_CARD_UNIT_BASE_CQW) }}> {card.unit}</span>}
+              <span className="category-sheet__stat-card-value" style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>
+                {renderAmount(card.amount)}
               </span>
             </div>
           ),
@@ -104,6 +113,7 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
       <div className="category-sheet__fact-row" dir="ltr">
         <div className="category-sheet__fact-table" dir={dir}>
           <div className="category-sheet__fact-table-labels">
+            <span className="category-sheet__fact-table-sub-bracket" aria-hidden="true" />
             {data.table.map((row) => (
               <span
                 key={row.id}
@@ -120,7 +130,7 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
           <div className="category-sheet__fact-table-values">
             {data.table.map((row) => (
               <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW) }}>
-                {row.value} <span style={{ fontSize: fontPx(FACT_TABLE_UNIT_BASE_CQW) }}>{row.unit}</span>
+                {renderAmount(row.amount)}
               </span>
             ))}
           </div>
@@ -144,9 +154,11 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
                 />
               </span>
               <span className="category-sheet__sugar-box-divider" />
-              <span className="category-sheet__sugar-box-value" style={{ fontSize: fontPx(SUGAR_BOX_VALUE_BASE_CQW) }}>
-                {item.value}
-                {item.unit ? <span style={{ fontSize: fontPx(SUGAR_BOX_UNIT_BASE_CQW) }}> {item.unit}</span> : ''}
+              <span
+                className="category-sheet__sugar-box-value"
+                style={{ fontSize: fontPx(SUGAR_BOX_VALUE_BASE_CQW) }}
+              >
+                {renderAmount(item.amount, { skipPrefix: index === 1 })}
               </span>
             </div>
           ))}
@@ -214,7 +226,7 @@ export default function CategorySheet({
     }
     const voice = pickBestVoice(window.speechSynthesis.getVoices(), t.speechLang.split('-')[0])
 
-    const factToSpeech = (fact) => `${fact.label} ${fact.value}${fact.unit ? ` ${fact.unit}` : ''}`
+    const factToSpeech = (fact) => `${fact.label} ${fact.amount}`
     const spokenBody = bodyNutrition
       ? [
           ...bodyNutrition.cards.map(factToSpeech),
@@ -351,7 +363,13 @@ export default function CategorySheet({
             </p>
           )}
           {bodyNutrition ? (
-            <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
+            <NutritionBody
+              data={bodyNutrition}
+              fontStep={fontStep}
+              iconScale={iconScale}
+              dir={dir}
+              approxPrefix={t.approxPrefix}
+            />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
