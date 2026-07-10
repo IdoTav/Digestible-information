@@ -222,6 +222,7 @@
 .category-sheet__body {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 8px 24px 32px;
 }
 
