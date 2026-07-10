@@ -39,13 +39,13 @@
   flex: 1;
   min-width: 0;
   align-self: center;
-  font-size: 10cqw;
+  font-size: 10.8cqw;
   font-weight: 600;
   line-height: 0.95;
   letter-spacing: -0.02em;
   color: #1c1c28;
   margin-inline-end: 5cqw;
-  overflow-wrap: break-word;
+  /* overflow-wrap: break-word; */
 }
 
 .category-chip__icon {

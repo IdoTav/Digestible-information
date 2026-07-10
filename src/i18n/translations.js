@@ -79,7 +79,7 @@ export const translations = {
     },
     categories: {
       ingredients: 'Ingredients list',
-      allergens: 'Allergen information',
+      allergens: 'Allergen info',
       kosher: 'Kosher',
       nutrition: 'Nutrition facts',
       storage: 'Storage instructions',
