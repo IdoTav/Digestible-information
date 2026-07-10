@@ -21,7 +21,10 @@
   position: fixed;
   left: 0;
   right: 0;
-  top: 34.38vh;
+  /* Generous on short screens (so the allergen grid always fits without scrolling),
+     but capped at 580px of sheet height on tall screens so it doesn't balloon into
+     mostly-empty space there. */
+  top: max(9vh, calc(100vh - 580px));
   bottom: 0;
   max-width: 480px;
   margin: 0 auto;
@@ -240,19 +243,26 @@
 .category-sheet__icon-grid {
   container-type: inline-size;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* 8 sub-columns (2 per visual column) so a partial 3-item second row can be
+     centered by offsetting its start by one sub-column — see :nth-child(5) below. */
+  grid-template-columns: repeat(8, 1fr);
   justify-items: center;
   gap: 6.5cqw 4.8cqw;
   padding-top: 6px;
 }
 
 .category-sheet__icon-item {
+  grid-column: span 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
   min-height: 76px;
+}
+
+.category-sheet__icon-item:nth-child(5) {
+  grid-column-start: 2;
 }
 
 .category-sheet__icon-item-img {
