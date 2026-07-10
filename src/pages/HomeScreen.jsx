@@ -24,8 +24,9 @@ const secondaryCategories = categories.filter((category) => category.group === '
 // last-resort fallback for the extreme cases where even that isn't enough (e.g. an
 // iPhone SE with Safari's toolbars visible) — it uniformly shrinks the page so it always
 // fits with zero scrolling, instead of letting it overflow.
-function useFitToViewport(contentRef) {
+function useFitToViewport(contentRef, syncDeps = []) {
   const [scale, setScale] = useState(1)
+  const recalcRef = useRef(null)
 
   useEffect(() => {
     const content = contentRef.current
@@ -44,6 +45,7 @@ function useFitToViewport(contentRef) {
       const next = Math.min(1, availableHeight / contentHeight)
       setScale((prev) => (Math.abs(prev - next) > 0.005 ? next : prev))
     }
+    recalcRef.current = recalc
 
     recalc()
 
@@ -63,6 +65,14 @@ function useFitToViewport(contentRef) {
     }
   }, [contentRef])
 
+  // Content-driven height changes (e.g. switching language re-wraps text to a
+  // different height) would otherwise only be picked up a frame later via the
+  // ResizeObserver above, causing a visible double-jump. Recalculating here too,
+  // synchronously in the same paint as the change, keeps it to one smooth motion.
+  useLayoutEffect(() => {
+    recalcRef.current?.()
+  }, syncDeps)
+
   return scale
 }
 
@@ -72,7 +82,7 @@ export default function HomeScreen() {
   const buttonRefs = useRef({})
   const [underline, setUnderline] = useState({ left: 0, width: 0 })
   const contentRef = useRef(null)
-  const scale = useFitToViewport(contentRef)
+  const scale = useFitToViewport(contentRef, [language])
 
   useLayoutEffect(() => {
     const activeButton = buttonRefs.current[language]
