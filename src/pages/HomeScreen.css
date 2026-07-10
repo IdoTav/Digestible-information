@@ -85,18 +85,19 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 14px;
-  color: #1c1c1e;
+  font-size: 17px;
+  color: #000000;
 }
 
 .more-info-divider__line {
   flex: 1;
   height: 1px;
-  background: #d8d8d8;
+  background: #818181;
 }
 
 .more-info-divider__label {
   white-space: nowrap;
+  font-weight: 400;
 }
 
 .category-list {
@@ -111,11 +112,11 @@
   justify-content: center;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   background: #e2e2e2;
   margin: 4px -20px calc(-1 * (24px + env(safe-area-inset-bottom)));
-  padding: 10px 16px calc(14px + env(safe-area-inset-bottom));
-  font-size: 14px;
+  padding: 14px 16px calc(18px + env(safe-area-inset-bottom));
+  font-size: 20px;
   color: #1c1c28;
 }
 
