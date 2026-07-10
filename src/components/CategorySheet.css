@@ -22,9 +22,9 @@
   left: 0;
   right: 0;
   /* Generous on short screens (so the allergen grid always fits without scrolling),
-     but capped at 580px of sheet height on tall screens so it doesn't balloon into
+     but capped at 545px of sheet height on tall screens so it doesn't balloon into
      mostly-empty space there. */
-  top: max(9vh, calc(100vh - 580px));
+  top: max(9vh, calc(100vh - 500px));
   bottom: 0;
   max-width: 480px;
   margin: 0 auto;
