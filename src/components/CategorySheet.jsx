@@ -32,10 +32,25 @@ const STAT_CARD_ICON_BUDGET_CQW = 12
 const STAT_CARD_LABEL_BASE_CQW = 3.6
 const STAT_CARD_VALUE_BASE_CQW = 4.6
 const STAT_CARD_UNIT_BASE_CQW = 3.2
-const FACT_TABLE_TEXT_BASE_CQW = 3.6
-const SUGAR_BOX_ICON_BUDGET_CQW = 8
-const SUGAR_BOX_LABEL_BASE_CQW = 3.4
-const SUGAR_BOX_VALUE_BASE_CQW = 4.4
+// Fact table + sugar box are sized directly off the Figma frame (393px wide iPhone
+// mockup, 16px side margins either side of the 361px-wide nutrition container), so
+// every px value below is that Figma px divided by 361 and multiplied by 100.
+const FIGMA_PX_TO_CQW = 100 / 361
+// The app's system-font stack renders Hebrew/Arabic noticeably wider than Figma's
+// source font, so the fact table's 5 nowrap rows need a scale-down from the raw
+// Figma px to actually fit the 55.1%-wide box without overlapping the divider.
+// Scale is picked to fit the longest row across all 3 supported languages
+// (Arabic's "إجمالي الكربوهيدرات" / "ملاعق صغيرة" run widest).
+const FACT_TABLE_FONT_SCALE = 0.7
+const FACT_TABLE_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * FACT_TABLE_FONT_SCALE
+const FACT_TABLE_UNIT_BASE_CQW = 16 * FIGMA_PX_TO_CQW * FACT_TABLE_FONT_SCALE
+const SUGAR_BOX_LABEL_FONT_SCALE = 0.54
+const SUGAR_BOX_LABEL_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * SUGAR_BOX_LABEL_FONT_SCALE
+const SUGAR_BOX_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW
+// transFat/cholesterol are sub-items of totalFat in the Figma reference (indented
+// under "סך השומנים"), so their labels get an extra inline-start margin.
+const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
+const SUGAR_BOX_UNIT_BASE_CQW = 14.76 * FIGMA_PX_TO_CQW
 
 function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
@@ -90,7 +105,13 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
         <div className="category-sheet__fact-table" dir={dir}>
           <div className="category-sheet__fact-table-labels">
             {data.table.map((row) => (
-              <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_TEXT_BASE_CQW) }}>
+              <span
+                key={row.id}
+                style={{
+                  fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW),
+                  marginInlineStart: FACT_TABLE_INDENTED_ROW_IDS.has(row.id) ? '0.8em' : 0,
+                }}
+              >
                 {row.label}
               </span>
             ))}
@@ -98,8 +119,8 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
           <span className="category-sheet__fact-table-divider" />
           <div className="category-sheet__fact-table-values">
             {data.table.map((row) => (
-              <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_TEXT_BASE_CQW) }}>
-                {row.value} {row.unit}
+              <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW) }}>
+                {row.value} <span style={{ fontSize: fontPx(FACT_TABLE_UNIT_BASE_CQW) }}>{row.unit}</span>
               </span>
             ))}
           </div>
@@ -108,21 +129,24 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
         <div className="category-sheet__sugar-box" dir={dir}>
           {[data.sugarBox.sugar, data.sugarBox.teaspoons].map((item, index) => (
             <div key={index} className="category-sheet__sugar-box-col">
-              <img
-                src={item.icon}
-                alt=""
-                className="category-sheet__sugar-box-icon"
-                style={{
-                  width: `${item.iconWidth * ((SUGAR_BOX_ICON_BUDGET_CQW / Math.max(item.iconWidth, item.iconHeight)) * iconScale)}cqw`,
-                  height: `${item.iconHeight * ((SUGAR_BOX_ICON_BUDGET_CQW / Math.max(item.iconWidth, item.iconHeight)) * iconScale)}cqw`,
-                }}
-              />
               <span className="category-sheet__sugar-box-label" style={{ fontSize: fontPx(SUGAR_BOX_LABEL_BASE_CQW) }}>
                 {item.label}
               </span>
+              <span className="category-sheet__sugar-box-icon-wrap">
+                <img
+                  src={item.icon}
+                  alt=""
+                  className="category-sheet__sugar-box-icon"
+                  style={{
+                    width: `${item.iconWidth * FIGMA_PX_TO_CQW * iconScale}cqw`,
+                    height: `${item.iconHeight * FIGMA_PX_TO_CQW * iconScale}cqw`,
+                  }}
+                />
+              </span>
+              <span className="category-sheet__sugar-box-divider" />
               <span className="category-sheet__sugar-box-value" style={{ fontSize: fontPx(SUGAR_BOX_VALUE_BASE_CQW) }}>
                 {item.value}
-                {item.unit ? ` ${item.unit}` : ''}
+                {item.unit ? <span style={{ fontSize: fontPx(SUGAR_BOX_UNIT_BASE_CQW) }}> {item.unit}</span> : ''}
               </span>
             </div>
           ))}
@@ -276,13 +300,14 @@ export default function CategorySheet({
             <span className="category-sheet__control-label">{t.contrast}</span>
           </button>
 
-          <div className="category-sheet__font-toggle">
+          <div className="category-sheet__font-toggle" dir="ltr">
             <button
               type="button"
               className="category-sheet__font-btn"
               onClick={() => setFontStep((s) => Math.max(MIN_FONT_STEP, s - 1))}
               disabled={fontStep <= MIN_FONT_STEP}
               aria-label={t.shrinkText}
+              dir={dir}
             >
               {t.fontGlyph}-
             </button>
@@ -293,6 +318,7 @@ export default function CategorySheet({
               onClick={() => setFontStep((s) => Math.min(MAX_FONT_STEP, s + 1))}
               disabled={fontStep >= MAX_FONT_STEP}
               aria-label={t.growText}
+              dir={dir}
             >
               {t.fontGlyph}+
             </button>

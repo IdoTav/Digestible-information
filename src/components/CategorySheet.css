@@ -47,7 +47,7 @@
    sugar box), so it gets a taller budget — starts higher up the screen —
    without affecting the ingredients/allergens sheets. */
 .category-sheet--nutrition {
-  top: max(5vh, calc(100vh - 640px));
+  top: max(5vh, calc(100vh - 580px));
 }
 
 .category-sheet--high-contrast {
@@ -369,17 +369,19 @@
 .category-sheet__fact-row {
   display: flex;
   gap: 2.8%;
-  margin-top: 6.5%;
+  margin-top: 3.9%;
 }
 
 .category-sheet__fact-table {
   flex: 0 0 55.1%;
+  min-width: 0;
+  height: 31.02cqw;
   display: flex;
   align-items: stretch;
   background: var(--sheet-bg);
   border: 1px solid var(--sheet-fg);
   border-radius: 15px;
-  padding: 6% 4%;
+  padding: 2.4% 2.5%;
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
@@ -388,7 +390,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 4px;
+  gap: 0;
+  min-width: 0;
 }
 
 .category-sheet__fact-table-labels {
@@ -399,6 +402,7 @@
 .category-sheet__fact-table-values span {
   color: var(--sheet-fg);
   font-weight: 600;
+  line-height: 0.945;
   white-space: nowrap;
   transition: color 0.25s ease, font-size 0.15s ease;
 }
@@ -407,26 +411,26 @@
   width: 1px;
   align-self: stretch;
   background: var(--sheet-fg);
-  margin: 0 3%;
+  margin: 0 1.5%;
   transition: background-color 0.25s ease;
 }
 
 .category-sheet__sugar-box {
   flex: 0 0 42.1%;
+  height: 31.02cqw;
   display: flex;
   background: #ff000e;
   border-radius: 14px;
   color: #fff;
-  padding: 8% 3%;
+  padding: 0.5% 3%;
 }
 
 .category-sheet__sugar-box-col {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 6%;
   text-align: center;
 }
 
@@ -436,7 +440,25 @@
 
 .category-sheet__sugar-box-label {
   font-weight: 600;
+  white-space: nowrap;
+  margin-bottom: 1.47cqw;
   transition: font-size 0.15s ease;
+}
+
+.category-sheet__sugar-box-icon-wrap {
+  height: 11.08cqw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3.05cqw;
+}
+
+.category-sheet__sugar-box-divider {
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.9;
+  margin-bottom: 0.3cqw;
 }
 
 .category-sheet__sugar-box-value {
