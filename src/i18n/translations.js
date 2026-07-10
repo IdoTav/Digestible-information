@@ -122,7 +122,7 @@ export const translations = {
     },
     categories: {
       ingredients: 'قائمة المكونات',
-      allergens: 'معلومات عن مسببات الحساسية',
+      allergens: 'معلومات عن الحساسية',
       kosher: 'كوشر',
       nutrition: 'القيمة\nالغذائية',
       storage: 'تعليمات التخزين',
