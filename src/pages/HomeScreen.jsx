@@ -5,6 +5,7 @@ import CategoryChip from '../components/CategoryChip.jsx'
 import CategoryListRow from '../components/CategoryListRow.jsx'
 import CameraButton from '../components/CameraButton.jsx'
 import CategorySheet from '../components/CategorySheet.jsx'
+import ImageLightbox from '../components/ImageLightbox.jsx'
 import { categories } from '../data/categories.js'
 import { allergenIcons } from '../data/allergenIcons.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
@@ -84,6 +85,7 @@ function useFitToViewport(contentRef, syncDeps = []) {
 
 export default function HomeScreen() {
   const [openSheet, setOpenSheet] = useState(null)
+  const [imageOpen, setImageOpen] = useState(false)
   const { language, setLanguage, t, dir } = useLanguage()
   const buttonRefs = useRef({})
   const [underline, setUnderline] = useState({ left: 0, width: 0 })
@@ -106,7 +108,14 @@ export default function HomeScreen() {
           </header>
 
           <div className="product-card" dir="ltr">
-            <img src={productPhoto} alt="" className="product-card__photo" />
+            <button
+              type="button"
+              className="product-card__photo-button"
+              onClick={() => setImageOpen(true)}
+              aria-label={t.brand}
+            >
+              <img src={productPhoto} alt="" className="product-card__photo" />
+            </button>
             <div className="product-card__text" dir={dir}>
               <p className="product-card__heading">
                 <span className="product-card__brand">{t.brand}</span>
@@ -181,6 +190,8 @@ export default function HomeScreen() {
         bodyHeadingColor="#EA2427"
         bodyIcons={allergenIcons.map((item) => ({ ...item, label: t.allergenLabels[item.id] }))}
       />
+
+      <ImageLightbox open={imageOpen} onClose={() => setImageOpen(false)} src={productPhoto} alt={t.brand} />
     </>
   )
 }
