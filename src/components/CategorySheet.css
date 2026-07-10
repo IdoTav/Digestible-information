@@ -309,15 +309,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 4%;
-  padding-bottom: 8%;
+  padding: 9% 0 8%;
   color: #fff;
 }
 
 .category-sheet__stat-card-icon {
   display: block;
-  position: relative;
 }
 
 .category-sheet__stat-card-bg-img {
@@ -326,6 +323,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.category-sheet__stat-card-icon-wrap {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .category-sheet__stat-card-label,

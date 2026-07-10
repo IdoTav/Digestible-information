@@ -50,6 +50,10 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
               <span className="category-sheet__stat-card-label" style={{ fontSize: fontPx(STAT_CARD_LABEL_BASE_CQW) }}>
                 {card.label}
               </span>
+              {/* The icon is baked into the background image above (already positioned in
+                  this middle zone), so this spacer just reserves the same flexible middle
+                  space the other two cards' real <img> icons occupy — nothing to render. */}
+              <span className="category-sheet__stat-card-icon-wrap" aria-hidden="true" />
               <span className="category-sheet__stat-card-divider" />
               <span className="category-sheet__stat-card-value">
                 <span style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>{card.value}</span>
@@ -58,17 +62,19 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
             </div>
           ) : (
             <div key={card.id} className="category-sheet__stat-card" style={{ backgroundColor: card.bg }}>
-              <img
-                src={card.icon}
-                alt=""
-                className="category-sheet__stat-card-icon"
-                style={{
-                  width: `${card.iconWidth * ((STAT_CARD_ICON_BUDGET_CQW / Math.max(card.iconWidth, card.iconHeight)) * iconScale)}cqw`,
-                  height: `${card.iconHeight * ((STAT_CARD_ICON_BUDGET_CQW / Math.max(card.iconWidth, card.iconHeight)) * iconScale)}cqw`,
-                }}
-              />
               <span className="category-sheet__stat-card-label" style={{ fontSize: fontPx(STAT_CARD_LABEL_BASE_CQW) }}>
                 {card.label}
+              </span>
+              <span className="category-sheet__stat-card-icon-wrap">
+                <img
+                  src={card.icon}
+                  alt=""
+                  className="category-sheet__stat-card-icon"
+                  style={{
+                    width: `${card.iconWidth * ((STAT_CARD_ICON_BUDGET_CQW / Math.max(card.iconWidth, card.iconHeight)) * iconScale)}cqw`,
+                    height: `${card.iconHeight * ((STAT_CARD_ICON_BUDGET_CQW / Math.max(card.iconWidth, card.iconHeight)) * iconScale)}cqw`,
+                  }}
+                />
               </span>
               <span className="category-sheet__stat-card-divider" />
               <span className="category-sheet__stat-card-value">
