@@ -43,6 +43,13 @@
   transform: translateY(0);
 }
 
+/* Nutrition sheet has more content than the others (stat cards, fact table,
+   sugar box), so it gets a taller budget — starts higher up the screen —
+   without affecting the ingredients/allergens sheets. */
+.category-sheet--nutrition {
+  top: max(5vh, calc(100vh - 640px));
+}
+
 .category-sheet--high-contrast {
   --sheet-bg: #000;
   --sheet-fg: #fff;

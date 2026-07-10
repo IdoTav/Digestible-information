@@ -242,7 +242,7 @@ export default function CategorySheet({
         aria-hidden="true"
       />
       <div
-        className={`category-sheet${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
+        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
         style={dragging ? { transform: `translateY(${dragY}px)`, transition: 'none' } : undefined}
         role="dialog"
         aria-modal="true"
