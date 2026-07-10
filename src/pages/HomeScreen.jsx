@@ -33,7 +33,13 @@ function useFitToViewport(contentRef, syncDeps = []) {
     if (!content) return undefined
 
     const recalc = () => {
-      const availableHeight = window.visualViewport?.height ?? window.innerHeight
+      const viewport = window.visualViewport
+      // Pinch-zooming also fires visualViewport's resize event (the visible area
+      // shrinks as the user zooms in). Recalculating against that would fight the
+      // zoom gesture — shrinking our own transform right as the user grows theirs.
+      // Skip while actively zoomed; resume once they're back to 1:1.
+      if (viewport && Math.abs(viewport.scale - 1) > 0.01) return
+      const availableHeight = viewport?.height ?? window.innerHeight
       // Measure against the true unscaled size — a transform shouldn't affect layout
       // height, but resetting it first guards against that assumption being wrong for
       // the container-query (cqw) sizing used inside CategoryChip/CategoryListRow.
