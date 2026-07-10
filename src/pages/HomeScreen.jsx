@@ -1,6 +1,8 @@
 import { Fragment, useLayoutEffect, useRef, useState } from 'react'
 import logo from '../assets/header-logo.svg'
+import productPhoto from '../assets/product-photo.png'
 import CategoryChip from '../components/CategoryChip.jsx'
+import CategoryListRow from '../components/CategoryListRow.jsx'
 import CameraButton from '../components/CameraButton.jsx'
 import CategorySheet from '../components/CategorySheet.jsx'
 import { categories } from '../data/categories.js'
@@ -14,20 +16,13 @@ const LANGUAGES = [
   { code: 'he', label: 'עברית', dir: 'rtl' },
 ]
 
-function breakAfter(text, marker) {
-  if (!marker) return [text, null]
-  const cut = text.indexOf(marker)
-  if (cut === -1) return [text, null]
-  const splitAt = cut + marker.length
-  return [text.slice(0, splitAt), text.slice(splitAt).trimStart()]
-}
-
 const SHEET_CATEGORIES = new Set(['ingredients', 'allergens'])
+const primaryCategories = categories.filter((category) => category.group === 'primary')
+const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
 export default function HomeScreen() {
   const [openSheet, setOpenSheet] = useState(null)
-  const { language, setLanguage, t } = useLanguage()
-  const [nameStart, nameRest] = breakAfter(t.productName, t.productNameBreakAfter)
+  const { language, setLanguage, t, dir } = useLanguage()
   const buttonRefs = useRef({})
   const [underline, setUnderline] = useState({ left: 0, width: 0 })
 
@@ -44,27 +39,39 @@ export default function HomeScreen() {
         <img src={logo} alt={t.logoAlt} className="home-screen__logo" />
       </header>
 
-      <div className="product-banner-group">
-        <div className="product-banner">
-          <p className="product-banner__name">
-            {nameStart}
-            {nameRest && <br />}
-            {nameRest}
+      <div className="product-card" dir="ltr">
+        <img src={productPhoto} alt="" className="product-card__photo" />
+        <div className="product-card__text" dir={dir}>
+          <p className="product-card__heading">
+            <span className="product-card__brand">{t.brand}</span>
+            <span className="product-card__weight">{t.weightValue}</span>
           </p>
+          <p className="product-card__description">{t.productName}</p>
         </div>
-        <p className="weight-badge">
-          {t.weightLabel}: <strong className="weight-badge__value">{t.weightValue}</strong>
-        </p>
       </div>
 
-      <div className="category-grid" dir="rtl">
-        {categories.map((category) => (
+      <hr className="section-divider" />
+
+      <div className="category-grid" dir="ltr">
+        {primaryCategories.map((category) => (
           <CategoryChip
             key={category.id}
             {...category}
             label={t.categories[category.id]}
             onClick={SHEET_CATEGORIES.has(category.id) ? () => setOpenSheet(category.id) : undefined}
           />
+        ))}
+      </div>
+
+      <div className="more-info-divider">
+        <span className="more-info-divider__line" aria-hidden="true" />
+        <span className="more-info-divider__label">{t.moreInfo}</span>
+        <span className="more-info-divider__line" aria-hidden="true" />
+      </div>
+
+      <div className="category-list">
+        {secondaryCategories.map((category) => (
+          <CategoryListRow key={category.id} {...category} label={t.categories[category.id]} />
         ))}
       </div>
 

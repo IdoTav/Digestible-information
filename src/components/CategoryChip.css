@@ -1,5 +1,7 @@
 .category-chip-container {
   container-type: inline-size;
+  width: 100%;
+  min-width: 0;
 }
 
 .category-chip {
@@ -8,7 +10,7 @@
   border: 2px solid var(--chip-color, #29256a);
   border-radius: 12px;
   background: #fff;
-  height: 34.63cqw;
+  height: 42.41cqw;
   overflow: hidden;
   transition: transform 0.1s ease, background-color 0.15s ease;
 }
@@ -22,14 +24,14 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 21.02cqw;
+  width: 15.19cqw;
   background: var(--chip-color, #29256a);
   color: #fff;
 }
 
 .category-chip__chevron {
-  width: 12.36cqw;
-  height: 7.42cqw;
+  width: 13cqw;
+  height: 7.6cqw;
   color: #fff;
 }
 
@@ -37,24 +39,39 @@
   flex: 1;
   min-width: 0;
   align-self: center;
-  font-size: 7.42cqw;
+  font-size: 8cqw;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
   color: #1c1c28;
-  margin-inline-end: 9cqw;
+  margin-inline-end: 5cqw;
+  overflow-wrap: break-word;
 }
 
 .category-chip__icon {
   align-self: center;
-  width: 19.17cqw;
-  height: 25.35cqw;
   flex-shrink: 0;
-  margin-inline-start: 3cqw;
-  margin-inline-end: 2.5cqw;
+  margin-inline-start: 2cqw;
+  margin-inline-end: 4cqw;
   object-fit: contain;
 }
 
+.category-chip__icon--allergens {
+  width: 20.25cqw;
+  height: 23.94cqw;
+}
+
+.category-chip__icon--ingredients {
+  width: 20.25cqw;
+  height: 26.5cqw;
+}
+
 .category-chip__icon--kosher {
-  width: 27cqw;
-  height: 27cqw;
+  width: 26.24cqw;
+  height: 17.34cqw;
+}
+
+.category-chip__icon--nutrition {
+  width: 16.15cqw;
+  height: 18.84cqw;
 }

@@ -8,12 +8,12 @@ import recyclingIcon from '../assets/icons/recycling.svg'
 import warningsIcon from '../assets/icons/warnings.svg'
 
 export const categories = [
-  { id: 'ingredients', icon: ingredientsIcon, color: '#43AA49' },
-  { id: 'allergens', icon: allergensIcon, color: '#DE0405' },
-  { id: 'kosher', icon: kosherIcon, color: '#44157A' },
-  { id: 'nutrition', icon: nutritionIcon, color: '#F5851F' },
-  { id: 'storage', icon: storageIcon, color: '#2FB0E9' },
-  { id: 'manufacturer', icon: manufacturerIcon, color: '#29256A' },
-  { id: 'warnings', icon: warningsIcon, color: '#DE0405' },
-  { id: 'recycling', icon: recyclingIcon, color: '#7E4836' },
+  { id: 'allergens', icon: allergensIcon, color: '#DE0405', group: 'primary' },
+  { id: 'ingredients', icon: ingredientsIcon, color: '#43AA49', group: 'primary' },
+  { id: 'kosher', icon: kosherIcon, color: '#2FB0E9', group: 'primary' },
+  { id: 'nutrition', icon: nutritionIcon, color: '#F5851F', group: 'primary' },
+  { id: 'manufacturer', icon: manufacturerIcon, color: '#29256A', group: 'secondary' },
+  { id: 'storage', icon: storageIcon, color: '#44157A', group: 'secondary' },
+  { id: 'recycling', icon: recyclingIcon, color: '#7E4836', group: 'secondary' },
+  { id: 'warnings', icon: warningsIcon, color: '#DE0405', group: 'secondary' },
 ]
