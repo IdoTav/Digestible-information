@@ -1,15 +1,16 @@
 .camera-button {
   margin-top: auto;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 8px 0 4px;
+  gap: clamp(4px, 1vh, 8px);
+  padding: clamp(4px, 1vh, 8px) 0 clamp(2px, 0.5vh, 4px);
 }
 
 .camera-button__trigger {
-  width: 72px;
-  height: 72px;
+  width: clamp(48px, 9vh, 72px);
+  height: clamp(48px, 9vh, 72px);
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -24,7 +25,7 @@
 }
 
 .camera-button__label {
-  font-size: 13px;
+  font-size: clamp(11px, 1.6vh, 13px);
   color: #4a4a55;
   font-weight: 500;
 }

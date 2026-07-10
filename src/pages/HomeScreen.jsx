@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useRef, useState } from 'react'
+import { Fragment, useLayoutEffect, useRef, useState, useEffect } from 'react'
 import logo from '../assets/header-logo.svg'
 import productPhoto from '../assets/product-photo.png'
 import CategoryChip from '../components/CategoryChip.jsx'
@@ -20,11 +20,59 @@ const SHEET_CATEGORIES = new Set(['ingredients', 'allergens'])
 const primaryCategories = categories.filter((category) => category.group === 'primary')
 const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
+// Fluid CSS (clamp()-based spacing) handles most short screens on its own. This is the
+// last-resort fallback for the extreme cases where even that isn't enough (e.g. an
+// iPhone SE with Safari's toolbars visible) — it uniformly shrinks the page so it always
+// fits with zero scrolling, instead of letting it overflow.
+function useFitToViewport(contentRef) {
+  const [scale, setScale] = useState(1)
+
+  useEffect(() => {
+    const content = contentRef.current
+    if (!content) return undefined
+
+    const recalc = () => {
+      const availableHeight = window.visualViewport?.height ?? window.innerHeight
+      // Measure against the true unscaled size — a transform shouldn't affect layout
+      // height, but resetting it first guards against that assumption being wrong for
+      // the container-query (cqw) sizing used inside CategoryChip/CategoryListRow.
+      const previousTransform = content.style.transform
+      content.style.transform = 'none'
+      const contentHeight = content.scrollHeight
+      content.style.transform = previousTransform
+      if (!contentHeight) return
+      const next = Math.min(1, availableHeight / contentHeight)
+      setScale((prev) => (Math.abs(prev - next) > 0.005 ? next : prev))
+    }
+
+    recalc()
+
+    const resizeObserver = new ResizeObserver(recalc)
+    resizeObserver.observe(content)
+
+    const viewport = window.visualViewport
+    viewport?.addEventListener('resize', recalc)
+    window.addEventListener('resize', recalc)
+    window.addEventListener('orientationchange', recalc)
+
+    return () => {
+      resizeObserver.disconnect()
+      viewport?.removeEventListener('resize', recalc)
+      window.removeEventListener('resize', recalc)
+      window.removeEventListener('orientationchange', recalc)
+    }
+  }, [contentRef])
+
+  return scale
+}
+
 export default function HomeScreen() {
   const [openSheet, setOpenSheet] = useState(null)
   const { language, setLanguage, t, dir } = useLanguage()
   const buttonRefs = useRef({})
   const [underline, setUnderline] = useState({ left: 0, width: 0 })
+  const contentRef = useRef(null)
+  const scale = useFitToViewport(contentRef)
 
   useLayoutEffect(() => {
     const activeButton = buttonRefs.current[language]
@@ -34,48 +82,73 @@ export default function HomeScreen() {
   }, [language])
 
   return (
-    <div className="home-screen">
-      <header className="home-screen__header">
-        <img src={logo} alt={t.logoAlt} className="home-screen__logo" />
-      </header>
+    <>
+      <div className="home-screen-stage">
+        <div className="home-screen" ref={contentRef} style={scale < 1 ? { transform: `scale(${scale})` } : undefined}>
+          <header className="home-screen__header">
+            <img src={logo} alt={t.logoAlt} className="home-screen__logo" />
+          </header>
 
-      <div className="product-card" dir="ltr">
-        <img src={productPhoto} alt="" className="product-card__photo" />
-        <div className="product-card__text" dir={dir}>
-          <p className="product-card__heading">
-            <span className="product-card__brand">{t.brand}</span>
-            <span className="product-card__weight">{t.weightValue}</span>
-          </p>
-          <p className="product-card__description">{t.productName}</p>
+          <div className="product-card" dir="ltr">
+            <img src={productPhoto} alt="" className="product-card__photo" />
+            <div className="product-card__text" dir={dir}>
+              <p className="product-card__heading">
+                <span className="product-card__brand">{t.brand}</span>
+                <span className="product-card__weight">{t.weightValue}</span>
+              </p>
+              <p className="product-card__description">{t.productName}</p>
+            </div>
+          </div>
+
+          <hr className="section-divider" />
+
+          <div className="category-grid" dir="ltr">
+            {primaryCategories.map((category) => (
+              <CategoryChip
+                key={category.id}
+                {...category}
+                label={t.categories[category.id]}
+                onClick={SHEET_CATEGORIES.has(category.id) ? () => setOpenSheet(category.id) : undefined}
+              />
+            ))}
+          </div>
+
+          <div className="more-info-divider">
+            <span className="more-info-divider__line" aria-hidden="true" />
+            <span className="more-info-divider__label">{t.moreInfo}</span>
+            <span className="more-info-divider__line" aria-hidden="true" />
+          </div>
+
+          <div className="category-list">
+            {secondaryCategories.map((category) => (
+              <CategoryListRow key={category.id} {...category} label={t.categories[category.id]} />
+            ))}
+          </div>
+
+          <CameraButton />
+
+          <footer className="language-switcher" dir="ltr">
+            {LANGUAGES.map(({ code, label, dir }, index) => (
+              <Fragment key={code}>
+                {index > 0 && <span aria-hidden="true">|</span>}
+                <button
+                  ref={(el) => {
+                    buttonRefs.current[code] = el
+                  }}
+                  type="button"
+                  lang={code}
+                  dir={dir}
+                  className={language === code ? 'language-switcher__active' : undefined}
+                  onClick={() => setLanguage(code)}
+                >
+                  {label}
+                </button>
+              </Fragment>
+            ))}
+            <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
+          </footer>
         </div>
       </div>
-
-      <hr className="section-divider" />
-
-      <div className="category-grid" dir="ltr">
-        {primaryCategories.map((category) => (
-          <CategoryChip
-            key={category.id}
-            {...category}
-            label={t.categories[category.id]}
-            onClick={SHEET_CATEGORIES.has(category.id) ? () => setOpenSheet(category.id) : undefined}
-          />
-        ))}
-      </div>
-
-      <div className="more-info-divider">
-        <span className="more-info-divider__line" aria-hidden="true" />
-        <span className="more-info-divider__label">{t.moreInfo}</span>
-        <span className="more-info-divider__line" aria-hidden="true" />
-      </div>
-
-      <div className="category-list">
-        {secondaryCategories.map((category) => (
-          <CategoryListRow key={category.id} {...category} label={t.categories[category.id]} />
-        ))}
-      </div>
-
-      <CameraButton />
 
       <CategorySheet
         open={openSheet === 'ingredients'}
@@ -92,27 +165,6 @@ export default function HomeScreen() {
         bodyHeadingColor="#EA2427"
         bodyIcons={allergenIcons.map((item) => ({ ...item, label: t.allergenLabels[item.id] }))}
       />
-
-      <footer className="language-switcher" dir="ltr">
-        {LANGUAGES.map(({ code, label, dir }, index) => (
-          <Fragment key={code}>
-            {index > 0 && <span aria-hidden="true">|</span>}
-            <button
-              ref={(el) => {
-                buttonRefs.current[code] = el
-              }}
-              type="button"
-              lang={code}
-              dir={dir}
-              className={language === code ? 'language-switcher__active' : undefined}
-              onClick={() => setLanguage(code)}
-            >
-              {label}
-            </button>
-          </Fragment>
-        ))}
-        <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
-      </footer>
-    </div>
+    </>
   )
 }
