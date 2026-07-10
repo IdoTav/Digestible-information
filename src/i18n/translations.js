@@ -35,7 +35,6 @@ export const translations = {
     },
     nutritionTitle: 'סימון תזונתי',
     nutritionSubtitle: 'ל-100 גרם מוצר',
-    approxPrefix: 'כ-',
     nutritionFacts: {
       sodium: { label: 'נתרן', amount: "145 גר׳" },
       satFat: { label: 'שומן רווי', amount: "15 גר׳" },
@@ -94,7 +93,6 @@ export const translations = {
     },
     nutritionTitle: 'Nutrition facts',
     nutritionSubtitle: 'Per 100g of product',
-    approxPrefix: '',
     nutritionFacts: {
       sodium: { label: 'Sodium', amount: '145 g' },
       satFat: { label: 'Saturated fat', amount: '15 g' },
@@ -152,7 +150,6 @@ export const translations = {
     },
     nutritionTitle: 'القيمة الغذائية',
     nutritionSubtitle: 'لكل 100 غرام من المنتج',
-    approxPrefix: 'ك-',
     nutritionFacts: {
       sodium: { label: 'الصوديوم', amount: '145 غ' },
       satFat: { label: 'الدهون المشبعة', amount: '15 غ' },

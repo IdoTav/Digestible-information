@@ -49,27 +49,26 @@ const SUGAR_BOX_VALUE_BASE_CQW = STAT_CARD_VALUE_BASE_CQW
 // under "סך השומנים"), so their labels get an extra inline-start margin.
 const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
 
-function NutritionBody({ data, fontStep, iconScale, dir, approxPrefix }) {
+function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
 
-  // The hidden prefix (כ-/حوالي-) sits inside an isolate matching the language's
-  // own reading direction, in the exact spot the visible "approx." prefix used
-  // to occupy — for rtl (he/ar) that means readers hit the number first, then
-  // the unit (right-to-left), matching how "כ-145 גר'" used to read, without
-  // actually showing the prefix. English (ltr) is unaffected.
-  const isolateStart = dir === 'rtl' ? '⁧' : '⁦'
-  const renderAmount = (amount, { skipPrefix = false } = {}) => (
-    <>
-      {isolateStart}
-      {!skipPrefix && approxPrefix && (
-        <span style={{ display: 'inline-block', width: 0, height: 0, lineHeight: 0, overflow: 'hidden' }}>
-          {approxPrefix}
-        </span>
-      )}
-      {amount}
-      {'⁩'}
-    </>
-  )
+  // flexbox (not inline-text bidi) so value-then-unit order is fixed by DOM
+  // order + the `direction` below, regardless of what characters the unit
+  // contains — relying on inline bidi reordering here proved inconsistent
+  // across browsers/scripts (gershayim vs plain apostrophe, he vs ar, etc).
+  // Splitting on the first space also lets the unit render smaller than the
+  // value, matching the Figma reference, in every language.
+  const renderAmount = (amount) => {
+    const spaceIdx = amount.indexOf(' ')
+    const value = spaceIdx === -1 ? amount : amount.slice(0, spaceIdx)
+    const unit = spaceIdx === -1 ? null : amount.slice(spaceIdx + 1)
+    return (
+      <span style={{ display: 'inline-flex', direction: dir, alignItems: 'baseline', gap: '0.2em' }}>
+        <span>{value}</span>
+        {unit && <span style={{ fontSize: '0.7em' }}>{unit}</span>}
+      </span>
+    )
+  }
 
   return (
     <div className="category-sheet__nutrition">
@@ -163,7 +162,7 @@ function NutritionBody({ data, fontStep, iconScale, dir, approxPrefix }) {
                 className="category-sheet__sugar-box-value"
                 style={{ fontSize: fontPx(SUGAR_BOX_VALUE_BASE_CQW) }}
               >
-                {renderAmount(item.amount, { skipPrefix: index === 1 })}
+                {renderAmount(item.amount)}
               </span>
             </div>
           ))}
@@ -368,13 +367,7 @@ export default function CategorySheet({
             </p>
           )}
           {bodyNutrition ? (
-            <NutritionBody
-              data={bodyNutrition}
-              fontStep={fontStep}
-              iconScale={iconScale}
-              dir={dir}
-              approxPrefix={t.approxPrefix}
-            />
+            <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
