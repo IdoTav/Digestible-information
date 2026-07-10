@@ -16,17 +16,18 @@ body {
 }
 
 /* The home page never scrolls (see .home-screen-stage), so this only ever shows on
-   pages/panels that are allowed to scroll (e.g. CategoryPage, CategorySheet's body) —
-   visible rather than the mobile-default invisible overlay scrollbar, as a affordance
-   that there's more content below. */
+   pages/panels that are allowed to scroll (e.g. CategoryPage, CategorySheet's body).
+   Note: has no effect on iOS Safari — it doesn't support scrollbar styling at all, on
+   iPhone/iPad this always renders as the native thin gray indicator regardless. This
+   only widens/colors it on Android Chrome, Firefox, and desktop browsers. */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #c7c7cc transparent;
+  scrollbar-width: auto;
+  scrollbar-color: #a8a8ad transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 12px;
+  height: 12px;
 }
 
 *::-webkit-scrollbar-track {
@@ -34,8 +35,10 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #c7c7cc;
-  border-radius: 3px;
+  background: #a8a8ad;
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
 
 a {

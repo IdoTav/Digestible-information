@@ -25,7 +25,7 @@ const secondaryCategories = categories.filter((category) => category.group === '
 // last-resort fallback for the extreme cases where even that isn't enough (e.g. an
 // iPhone SE with Safari's toolbars visible) — it uniformly shrinks the page so it always
 // fits with zero scrolling, instead of letting it overflow.
-function useFitToViewport(contentRef, syncDeps = []) {
+function useFitToViewport(contentRef, middleRef, syncDeps = []) {
   const [scale, setScale] = useState(1)
   const recalcRef = useRef(null)
 
@@ -40,7 +40,10 @@ function useFitToViewport(contentRef, syncDeps = []) {
       // zoom gesture — shrinking our own transform right as the user grows theirs.
       // Skip while actively zoomed; resume once they're back to 1:1.
       if (viewport && Math.abs(viewport.scale - 1) > 0.01) return
-      const availableHeight = viewport?.height ?? window.innerHeight
+      // .home-screen-middle's own clientHeight already accounts for the header/footer's
+      // actual rendered height (they're its flex siblings within the stage), so this is
+      // the space actually available to .home-screen — not the full viewport height.
+      const availableHeight = middleRef.current?.clientHeight
       // Measure against the true unscaled size — a transform shouldn't affect layout
       // height, but resetting it first guards against that assumption being wrong for
       // the container-query (cqw) sizing used inside CategoryChip/CategoryListRow.
@@ -58,6 +61,7 @@ function useFitToViewport(contentRef, syncDeps = []) {
 
     const resizeObserver = new ResizeObserver(recalc)
     resizeObserver.observe(content)
+    if (middleRef.current) resizeObserver.observe(middleRef.current)
 
     const viewport = window.visualViewport
     viewport?.addEventListener('resize', recalc)
@@ -70,7 +74,7 @@ function useFitToViewport(contentRef, syncDeps = []) {
       window.removeEventListener('resize', recalc)
       window.removeEventListener('orientationchange', recalc)
     }
-  }, [contentRef])
+  }, [contentRef, middleRef])
 
   // Content-driven height changes (e.g. switching language re-wraps text to a
   // different height) would otherwise only be picked up a frame later via the
@@ -90,7 +94,8 @@ export default function HomeScreen() {
   const buttonRefs = useRef({})
   const [underline, setUnderline] = useState({ left: 0, width: 0 })
   const contentRef = useRef(null)
-  const scale = useFitToViewport(contentRef, [language])
+  const middleRef = useRef(null)
+  const scale = useFitToViewport(contentRef, middleRef, [language])
 
   useLayoutEffect(() => {
     const activeButton = buttonRefs.current[language]
@@ -102,11 +107,12 @@ export default function HomeScreen() {
   return (
     <>
       <div className="home-screen-stage">
-        <div className="home-screen" ref={contentRef} style={scale < 1 ? { transform: `scale(${scale})` } : undefined}>
-          <header className="home-screen__header">
-            <img src={logo} alt={t.logoAlt} className="home-screen__logo" />
-          </header>
+        <header className="home-screen__header">
+          <img src={logo} alt={t.logoAlt} className="home-screen__logo" />
+        </header>
 
+        <div className="home-screen-middle" ref={middleRef}>
+        <div className="home-screen" ref={contentRef} style={scale < 1 ? { transform: `scale(${scale})` } : undefined}>
           <div className="product-card" dir="ltr">
             <button
               type="button"
@@ -151,28 +157,29 @@ export default function HomeScreen() {
           </div>
 
           <CameraButton />
-
-          <footer className="language-switcher" dir="ltr">
-            {LANGUAGES.map(({ code, label, dir }, index) => (
-              <Fragment key={code}>
-                {index > 0 && <span aria-hidden="true">|</span>}
-                <button
-                  ref={(el) => {
-                    buttonRefs.current[code] = el
-                  }}
-                  type="button"
-                  lang={code}
-                  dir={dir}
-                  className={language === code ? 'language-switcher__active' : undefined}
-                  onClick={() => setLanguage(code)}
-                >
-                  {label}
-                </button>
-              </Fragment>
-            ))}
-            <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
-          </footer>
         </div>
+        </div>
+
+        <footer className="language-switcher" dir="ltr">
+          {LANGUAGES.map(({ code, label, dir }, index) => (
+            <Fragment key={code}>
+              {index > 0 && <span aria-hidden="true">|</span>}
+              <button
+                ref={(el) => {
+                  buttonRefs.current[code] = el
+                }}
+                type="button"
+                lang={code}
+                dir={dir}
+                className={language === code ? 'language-switcher__active' : undefined}
+                onClick={() => setLanguage(code)}
+              >
+                {label}
+              </button>
+            </Fragment>
+          ))}
+          <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
+        </footer>
       </div>
 
       <CategorySheet

@@ -3,59 +3,50 @@
   height: 100svh;
   overflow: hidden;
   display: flex;
-  justify-content: center;
-  background: #ffffff;
-}
-
-.home-screen {
-  --edge-pad-top: max(clamp(8px, 2vh, 20px), env(safe-area-inset-top));
-  --edge-pad-bottom: calc(clamp(8px, 2.2vh, 24px) + env(safe-area-inset-bottom));
-  max-width: 480px;
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  padding: var(--edge-pad-top) 20px var(--edge-pad-bottom);
-  display: flex;
   flex-direction: column;
-  gap: clamp(8px, 2.2vh, 20px);
-  transform-origin: top center;
-  transition: transform 0.25s ease;
+  background: #ffffff;
 }
 
+/* Header and footer are siblings of .home-screen (not descendants) specifically so
+   they're never inside the element that useFitToViewport applies transform: scale() to
+   — a scaled ancestor visually shrinks everything inside it, including a child that's
+   sized to 100vw, which left a real (if sometimes subtle) gap at the edges. As direct,
+   un-scaled children of the full-width stage, they need no bleed trick at all: their
+   own box already spans the true viewport width. */
 .home-screen__header {
-  position: relative;
-  isolation: isolate;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  margin-top: calc(-1 * var(--edge-pad-top));
-  padding: calc(var(--edge-pad-top) + clamp(6px, 1.4vh, 12px)) 20px clamp(8px, 1.8vh, 16px);
-}
-
-.home-screen__header::before {
-  /* True viewport-edge-to-edge background bleed. This is a background-only, fully
-     out-of-flow layer (absolute + 100vw) so it can never affect .home-screen's own
-     flex sizing — negative-margining the header element itself to .home-screen's edge
-     isn't enough once the viewport is wider than .home-screen's 480px cap (since
-     .home-screen is itself centered within the full-width stage), and trying to
-     100vw-bleed the header element directly fought the flex layout's width math.
-     z-index:-1 puts it behind the logo — safe from escaping to an ancestor's stacking
-     context because `isolation: isolate` above scopes it to this element only. */
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
   background: #e2e2e2;
-  z-index: -1;
+  padding: calc(max(clamp(8px, 2vh, 20px), env(safe-area-inset-top)) + clamp(6px, 1.4vh, 12px)) 20px
+    clamp(8px, 1.8vh, 16px);
 }
 
 .home-screen__logo {
   height: clamp(22px, 4.5vh, 31.6px);
   width: auto;
+}
+
+.home-screen-middle {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.home-screen {
+  max-width: 480px;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  padding: clamp(8px, 2.2vh, 20px) 20px calc(clamp(8px, 2.2vh, 20px) + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2.2vh, 20px);
+  transform-origin: top center;
+  transition: transform 0.25s ease;
 }
 
 .product-card {
@@ -163,33 +154,19 @@
   gap: clamp(5px, 1.2vh, 10px);
 }
 
+/* Sibling of .home-screen, not a descendant — see the comment on .home-screen__header
+   for why (avoids being visually shrunk by the fit-to-viewport scale transform). */
 .language-switcher {
   position: relative;
-  isolation: isolate;
   flex-shrink: 0;
   justify-content: center;
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: clamp(2px, 0.5vh, 4px);
-  margin-bottom: calc(-1 * var(--edge-pad-bottom));
-  padding: clamp(8px, 1.6vh, 14px) 16px var(--edge-pad-bottom);
+  background: #e2e2e2;
+  padding: clamp(8px, 1.6vh, 14px) 16px calc(clamp(8px, 2.2vh, 20px) + env(safe-area-inset-bottom));
   font-size: 20px;
   color: #1c1c28;
-}
-
-.language-switcher::before {
-  /* Same true viewport-edge background bleed as .home-screen__header::before — see
-     comment there re: z-index:-1 + isolation:isolate. */
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  background: #e2e2e2;
-  z-index: -1;
 }
 
 .language-switcher button {
