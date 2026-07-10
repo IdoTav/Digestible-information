@@ -45,11 +45,8 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
       <div className="category-sheet__stat-row" dir="ltr">
         {data.cards.map((card) =>
           card.flattenedImage ? (
-            <div
-              key={card.id}
-              className="category-sheet__stat-card category-sheet__stat-card--flattened"
-              style={{ backgroundImage: `url(${card.flattenedImage})` }}
-            >
+            <div key={card.id} className="category-sheet__stat-card category-sheet__stat-card--flattened">
+              <img src={card.flattenedImage} alt="" className="category-sheet__stat-card-bg-img" />
               <span className="category-sheet__stat-card-label" style={{ fontSize: fontPx(STAT_CARD_LABEL_BASE_CQW) }}>
                 {card.label}
               </span>
