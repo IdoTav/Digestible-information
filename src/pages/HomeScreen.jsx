@@ -8,6 +8,7 @@ import CategorySheet from '../components/CategorySheet.jsx'
 import ImageLightbox from '../components/ImageLightbox.jsx'
 import { categories } from '../data/categories.js'
 import { allergenIcons } from '../data/allergenIcons.js'
+import { nutritionStatCards, nutritionTableRowIds, nutritionSugarBoxIcons } from '../data/nutritionFacts.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
@@ -17,7 +18,7 @@ const LANGUAGES = [
   { code: 'he', label: 'עברית', dir: 'rtl' },
 ]
 
-const SHEET_CATEGORIES = new Set(['ingredients', 'allergens'])
+const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition'])
 const primaryCategories = categories.filter((category) => category.group === 'primary')
 const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
@@ -198,6 +199,21 @@ export default function HomeScreen() {
         bodyHeading={t.allergensIntro}
         bodyHeadingColor="#EA2427"
         bodyIcons={allergenIcons.map((item) => ({ ...item, label: t.allergenLabels[item.id] }))}
+      />
+
+      <CategorySheet
+        open={openSheet === 'nutrition'}
+        onClose={() => setOpenSheet(null)}
+        title={t.nutritionTitle}
+        subtitle={t.nutritionSubtitle}
+        bodyNutrition={{
+          cards: nutritionStatCards.map((item) => ({ ...item, ...t.nutritionFacts[item.id] })),
+          table: nutritionTableRowIds.map((id) => ({ id, ...t.nutritionFacts[id] })),
+          sugarBox: {
+            sugar: { ...nutritionSugarBoxIcons.sugar, ...t.nutritionFacts.sugar },
+            teaspoons: { ...nutritionSugarBoxIcons.teaspoons, ...t.nutritionFacts.teaspoons },
+          },
+        }}
       />
 
       <ImageLightbox open={imageOpen} onClose={() => setImageOpen(false)} src={productPhoto} alt={t.brand} />

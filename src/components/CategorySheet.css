@@ -76,6 +76,15 @@
   transition: color 0.25s ease;
 }
 
+.category-sheet__subtitle {
+  margin: 4px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--sheet-fg);
+  text-align: center;
+  transition: color 0.25s ease;
+}
+
 .category-sheet__controls {
   display: flex;
   align-items: center;
@@ -278,5 +287,131 @@
   color: #ea2427;
   font-weight: 600;
   text-align: center;
+  transition: font-size 0.15s ease;
+}
+
+.category-sheet__nutrition {
+  container-type: inline-size;
+  padding-top: 6px;
+}
+
+.category-sheet__stat-row {
+  display: flex;
+  gap: 3.5%;
+}
+
+.category-sheet__stat-card {
+  flex: 1 1 0;
+  aspect-ratio: 1;
+  border-radius: 16%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4%;
+  padding-bottom: 8%;
+  color: #fff;
+  background-size: cover;
+  background-position: center;
+}
+
+.category-sheet__stat-card-icon {
+  display: block;
+}
+
+.category-sheet__stat-card-label {
+  font-weight: 600;
+  text-align: center;
+  transition: font-size 0.15s ease;
+}
+
+.category-sheet__stat-card-divider {
+  width: 70%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.9;
+}
+
+.category-sheet__stat-card-value {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.category-sheet__fact-row {
+  display: flex;
+  gap: 2.8%;
+  margin-top: 6.5%;
+}
+
+.category-sheet__fact-table {
+  flex: 0 0 55.1%;
+  display: flex;
+  align-items: stretch;
+  background: var(--sheet-bg);
+  border: 1px solid var(--sheet-fg);
+  border-radius: 15px;
+  padding: 6% 4%;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.category-sheet__fact-table-labels,
+.category-sheet__fact-table-values {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.category-sheet__fact-table-labels {
+  flex: 1;
+}
+
+.category-sheet__fact-table-labels span,
+.category-sheet__fact-table-values span {
+  color: var(--sheet-fg);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.25s ease, font-size 0.15s ease;
+}
+
+.category-sheet__fact-table-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--sheet-fg);
+  margin: 0 3%;
+  transition: background-color 0.25s ease;
+}
+
+.category-sheet__sugar-box {
+  flex: 0 0 42.1%;
+  display: flex;
+  background: #ff000e;
+  border-radius: 14px;
+  color: #fff;
+  padding: 8% 3%;
+}
+
+.category-sheet__sugar-box-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6%;
+  text-align: center;
+}
+
+.category-sheet__sugar-box-icon {
+  display: block;
+}
+
+.category-sheet__sugar-box-label {
+  font-weight: 600;
+  transition: font-size 0.15s ease;
+}
+
+.category-sheet__sugar-box-value {
+  font-weight: 600;
+  white-space: nowrap;
   transition: font-size 0.15s ease;
 }

@@ -24,6 +24,111 @@ const LABEL_BASE_CQW = 4.6
 // line offsetting for this turned out not to center symmetrically under RTL.
 const ICONS_PER_ROW = 4
 
+// Nutrition body sizing follows the same cqw-relative-to-fontStep approach as the
+// icon grid above, for the same reason: fixed cards/boxes must not overflow/clip at
+// the max font-size step. Budgets are calibrated against the stat-card row's own
+// content width (matching each icon's footprint in the Figma reference).
+const STAT_CARD_ICON_BUDGET_CQW = 12
+const STAT_CARD_LABEL_BASE_CQW = 3.6
+const STAT_CARD_VALUE_BASE_CQW = 4.6
+const STAT_CARD_UNIT_BASE_CQW = 3.2
+const FACT_TABLE_TEXT_BASE_CQW = 3.6
+const SUGAR_BOX_ICON_BUDGET_CQW = 8
+const SUGAR_BOX_LABEL_BASE_CQW = 3.4
+const SUGAR_BOX_VALUE_BASE_CQW = 4.4
+
+function NutritionBody({ data, fontStep, iconScale, dir }) {
+  const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
+
+  return (
+    <div className="category-sheet__nutrition">
+      <div className="category-sheet__stat-row" dir="ltr">
+        {data.cards.map((card) =>
+          card.flattenedImage ? (
+            <div
+              key={card.id}
+              className="category-sheet__stat-card category-sheet__stat-card--flattened"
+              style={{ backgroundImage: `url(${card.flattenedImage})` }}
+            >
+              <span className="category-sheet__stat-card-label" style={{ fontSize: fontPx(STAT_CARD_LABEL_BASE_CQW) }}>
+                {card.label}
+              </span>
+              <span className="category-sheet__stat-card-divider" />
+              <span className="category-sheet__stat-card-value">
+                <span style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>{card.value}</span>
+                {card.unit && <span style={{ fontSize: fontPx(STAT_CARD_UNIT_BASE_CQW) }}> {card.unit}</span>}
+              </span>
+            </div>
+          ) : (
+            <div key={card.id} className="category-sheet__stat-card" style={{ backgroundColor: card.bg }}>
+              <img
+                src={card.icon}
+                alt=""
+                className="category-sheet__stat-card-icon"
+                style={{
+                  width: `${card.iconWidth * ((STAT_CARD_ICON_BUDGET_CQW / Math.max(card.iconWidth, card.iconHeight)) * iconScale)}cqw`,
+                  height: `${card.iconHeight * ((STAT_CARD_ICON_BUDGET_CQW / Math.max(card.iconWidth, card.iconHeight)) * iconScale)}cqw`,
+                }}
+              />
+              <span className="category-sheet__stat-card-label" style={{ fontSize: fontPx(STAT_CARD_LABEL_BASE_CQW) }}>
+                {card.label}
+              </span>
+              <span className="category-sheet__stat-card-divider" />
+              <span className="category-sheet__stat-card-value">
+                <span style={{ fontSize: fontPx(STAT_CARD_VALUE_BASE_CQW) }}>{card.value}</span>
+                {card.unit && <span style={{ fontSize: fontPx(STAT_CARD_UNIT_BASE_CQW) }}> {card.unit}</span>}
+              </span>
+            </div>
+          ),
+        )}
+      </div>
+
+      <div className="category-sheet__fact-row" dir="ltr">
+        <div className="category-sheet__fact-table" dir={dir}>
+          <div className="category-sheet__fact-table-labels">
+            {data.table.map((row) => (
+              <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_TEXT_BASE_CQW) }}>
+                {row.label}
+              </span>
+            ))}
+          </div>
+          <span className="category-sheet__fact-table-divider" />
+          <div className="category-sheet__fact-table-values">
+            {data.table.map((row) => (
+              <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_TEXT_BASE_CQW) }}>
+                {row.value} {row.unit}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="category-sheet__sugar-box" dir={dir}>
+          {[data.sugarBox.sugar, data.sugarBox.teaspoons].map((item, index) => (
+            <div key={index} className="category-sheet__sugar-box-col">
+              <img
+                src={item.icon}
+                alt=""
+                className="category-sheet__sugar-box-icon"
+                style={{
+                  width: `${item.iconWidth * ((SUGAR_BOX_ICON_BUDGET_CQW / Math.max(item.iconWidth, item.iconHeight)) * iconScale)}cqw`,
+                  height: `${item.iconHeight * ((SUGAR_BOX_ICON_BUDGET_CQW / Math.max(item.iconWidth, item.iconHeight)) * iconScale)}cqw`,
+                }}
+              />
+              <span className="category-sheet__sugar-box-label" style={{ fontSize: fontPx(SUGAR_BOX_LABEL_BASE_CQW) }}>
+                {item.label}
+              </span>
+              <span className="category-sheet__sugar-box-value" style={{ fontSize: fontPx(SUGAR_BOX_VALUE_BASE_CQW) }}>
+                {item.value}
+                {item.unit ? ` ${item.unit}` : ''}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
   if (matches.length === 0) return null
@@ -32,8 +137,18 @@ function pickBestVoice(voices, langPrefix) {
   return matches.find((v) => !v.localService) || matches[0]
 }
 
-export default function CategorySheet({ open, onClose, title, bodyHeading, bodyHeadingColor, bodyText, bodyIcons }) {
-  const { t } = useLanguage()
+export default function CategorySheet({
+  open,
+  onClose,
+  title,
+  subtitle,
+  bodyHeading,
+  bodyHeadingColor,
+  bodyText,
+  bodyIcons,
+  bodyNutrition,
+}) {
+  const { t, dir } = useLanguage()
   const [dragY, setDragY] = useState(0)
   const [dragging, setDragging] = useState(false)
   const [fontStep, setFontStep] = useState(0)
@@ -72,8 +187,19 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
     }
     const voice = pickBestVoice(window.speechSynthesis.getVoices(), t.speechLang.split('-')[0])
 
-    const spokenBody = bodyIcons ? bodyIcons.map((item) => item.label).join(', ') : bodyText
-    const utterance = new SpeechSynthesisUtterance(bodyHeading ? `${bodyHeading} ${spokenBody}` : spokenBody)
+    const factToSpeech = (fact) => `${fact.label} ${fact.value}${fact.unit ? ` ${fact.unit}` : ''}`
+    const spokenBody = bodyNutrition
+      ? [
+          ...bodyNutrition.cards.map(factToSpeech),
+          ...bodyNutrition.table.map(factToSpeech),
+          factToSpeech(bodyNutrition.sugarBox.sugar),
+          factToSpeech(bodyNutrition.sugarBox.teaspoons),
+        ].join(', ')
+      : bodyIcons
+      ? bodyIcons.map((item) => item.label).join(', ')
+      : bodyText
+    const speechLead = bodyHeading || subtitle
+    const utterance = new SpeechSynthesisUtterance(speechLead ? `${speechLead} ${spokenBody}` : spokenBody)
     utterance.lang = t.speechLang
     utterance.rate = 0.92
     if (voice) utterance.voice = voice
@@ -128,6 +254,7 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
         >
           <div className="category-sheet__handle" />
           <h2 className="category-sheet__title">{title}</h2>
+          {subtitle && <p className="category-sheet__subtitle">{subtitle}</p>}
         </div>
 
         <div className="category-sheet__controls">
@@ -194,7 +321,9 @@ export default function CategorySheet({ open, onClose, title, bodyHeading, bodyH
               {bodyHeading}
             </p>
           )}
-          {bodyIcons ? (
+          {bodyNutrition ? (
+            <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
+          ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
                 .filter((row) => row.length > 0)
