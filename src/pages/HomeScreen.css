@@ -19,6 +19,7 @@
   flex-direction: column;
   gap: clamp(8px, 2.2vh, 20px);
   transform-origin: top center;
+  transition: transform 0.25s ease;
 }
 
 .home-screen__header {
@@ -37,6 +38,7 @@
 }
 
 .product-card {
+  container-type: inline-size;
   display: flex;
   align-items: flex-start;
   flex-shrink: 0;
@@ -65,20 +67,20 @@
 }
 
 .product-card__brand {
-  font-size: 26px;
+  font-size: 7.5wcqw;
   font-weight: 800;
   color: #1c1c1e;
 }
 
 .product-card__weight {
-  font-size: 15px;
+  font-size: 4.4cqw;
   font-weight: 400;
   color: #1c1c1e;
 }
 
 .product-card__description {
   margin: 0;
-  font-size: 15px;
+  font-size: 4.4cqw;
   line-height: 1.4;
   color: #1c1c1e;
   text-align: start;
