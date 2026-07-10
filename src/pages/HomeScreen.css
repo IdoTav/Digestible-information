@@ -40,7 +40,7 @@
 .product-card {
   container-type: inline-size;
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   flex-shrink: 0;
   gap: 14px;
 }
@@ -88,7 +88,7 @@
 
 .section-divider {
   border: none;
-  border-top: 1px solid #d8d8d8;
+  border-top: 1px solid #818181;
   margin: 0;
   flex-shrink: 0;
 }
