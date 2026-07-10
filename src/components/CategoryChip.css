@@ -39,13 +39,17 @@
   flex: 1;
   min-width: 0;
   align-self: center;
-  font-size: 10.8cqw;
+  font-size: 11cqw;
   font-weight: 600;
   line-height: 0.95;
   letter-spacing: -0.02em;
   color: #1c1c28;
   margin-inline-end: 5cqw;
   /* overflow-wrap: break-word; */
+  /* Lets a literal \n in the label text (see categories.nutrition in translations.js)
+     force a line break at a specific word, while still wrapping normally at spaces/
+     width for labels that don't have one. */
+  white-space: pre-line;
 }
 
 .category-chip__icon {

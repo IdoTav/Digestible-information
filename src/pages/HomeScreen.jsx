@@ -161,24 +161,26 @@ export default function HomeScreen() {
         </div>
 
         <footer className="language-switcher" dir="ltr">
-          {LANGUAGES.map(({ code, label, dir }, index) => (
-            <Fragment key={code}>
-              {index > 0 && <span aria-hidden="true">|</span>}
-              <button
-                ref={(el) => {
-                  buttonRefs.current[code] = el
-                }}
-                type="button"
-                lang={code}
-                dir={dir}
-                className={language === code ? 'language-switcher__active' : undefined}
-                onClick={() => setLanguage(code)}
-              >
-                {label}
-              </button>
-            </Fragment>
-          ))}
-          <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
+          <div className="language-switcher__row">
+            {LANGUAGES.map(({ code, label, dir }, index) => (
+              <Fragment key={code}>
+                {index > 0 && <span aria-hidden="true">|</span>}
+                <button
+                  ref={(el) => {
+                    buttonRefs.current[code] = el
+                  }}
+                  type="button"
+                  lang={code}
+                  dir={dir}
+                  className={language === code ? 'language-switcher__active' : undefined}
+                  onClick={() => setLanguage(code)}
+                >
+                  {label}
+                </button>
+              </Fragment>
+            ))}
+            <span className="language-switcher__underline" style={{ left: underline.left, width: underline.width }} />
+          </div>
         </footer>
       </div>
 

@@ -157,16 +157,25 @@
 /* Sibling of .home-screen, not a descendant — see the comment on .home-screen__header
    for why (avoids being visually shrunk by the fit-to-viewport scale transform). */
 .language-switcher {
-  position: relative;
   flex-shrink: 0;
   justify-content: center;
   display: flex;
   align-items: center;
-  gap: 16px;
   background: #e2e2e2;
   padding: clamp(8px, 1.6vh, 14px) 16px calc(clamp(8px, 2.2vh, 20px) + env(safe-area-inset-bottom));
   font-size: 20px;
+  font-weight: 700;
   color: #1c1c28;
+}
+
+/* Positioned ancestor for the underline, sized to just the text row (not the
+   switcher's own padding, which is padded out further to cover the safe area) — keeps
+   the underline anchored close to the text instead of floating near the bottom edge. */
+.language-switcher__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .language-switcher button {
@@ -182,12 +191,11 @@
 
 .language-switcher__active {
   color: #29256a;
-  font-weight: 700;
 }
 
 .language-switcher__underline {
   position: absolute;
-  bottom: 4px;
+  bottom: -6px;
   height: 2px;
   background: #29256a;
   border-radius: 2px;
