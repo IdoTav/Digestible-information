@@ -29,7 +29,7 @@ const ICONS_PER_ROW = 4
 // the max font-size step. Budgets are calibrated against the stat-card row's own
 // content width (matching each icon's footprint in the Figma reference).
 const STAT_CARD_ICON_BUDGET_CQW = 12
-const STAT_CARD_LABEL_BASE_CQW = 3.6
+const STAT_CARD_LABEL_BASE_CQW = 4.8
 const STAT_CARD_VALUE_BASE_CQW = 4.6
 // Fact table + sugar box are sized directly off the Figma frame (393px wide iPhone
 // mockup, 16px side margins either side of the 361px-wide nutrition container), so
@@ -42,7 +42,7 @@ const FIGMA_PX_TO_CQW = 100 / 361
 // (Arabic's "إجمالي الكربوهيدرات" / "ملاعق صغيرة" run widest).
 const FACT_TABLE_FONT_SCALE = 0.7
 const FACT_TABLE_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * FACT_TABLE_FONT_SCALE
-const SUGAR_BOX_LABEL_FONT_SCALE = 0.54
+const SUGAR_BOX_LABEL_FONT_SCALE = 0.8
 const SUGAR_BOX_LABEL_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW * SUGAR_BOX_LABEL_FONT_SCALE
 const SUGAR_BOX_VALUE_BASE_CQW = 21.705 * FIGMA_PX_TO_CQW
 // transFat/cholesterol are sub-items of totalFat in the Figma reference (indented
@@ -52,14 +52,19 @@ const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
 function NutritionBody({ data, fontStep, iconScale, dir, approxPrefix }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
 
-  // The hidden prefix (כ-/حوالي-) sits inside the same LTR isolate as the amount,
-  // in the exact spot the visible "approx." prefix used to occupy — keeping the
-  // number-before-unit bidi resolution that prefix produced, without showing it.
+  // The hidden prefix (כ-/حوالي-) sits inside an isolate matching the language's
+  // own reading direction, in the exact spot the visible "approx." prefix used
+  // to occupy — for rtl (he/ar) that means readers hit the number first, then
+  // the unit (right-to-left), matching how "כ-145 גר'" used to read, without
+  // actually showing the prefix. English (ltr) is unaffected.
+  const isolateStart = dir === 'rtl' ? '⁧' : '⁦'
   const renderAmount = (amount, { skipPrefix = false } = {}) => (
     <>
-      {'⁦'}
+      {isolateStart}
       {!skipPrefix && approxPrefix && (
-        <span style={{ display: 'inline-block', width: 0, overflow: 'hidden' }}>{approxPrefix}</span>
+        <span style={{ display: 'inline-block', width: 0, height: 0, lineHeight: 0, overflow: 'hidden' }}>
+          {approxPrefix}
+        </span>
       )}
       {amount}
       {'⁩'}
