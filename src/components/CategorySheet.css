@@ -62,13 +62,13 @@
    shorter sheet on its own, so this budget was trimmed back down from its
    earlier, more generous height. */
 .category-sheet--manufacturer {
-  top: max(18vh, calc(100vh - 500px));
+  top: max(12vh, calc(100vh - 560px));
 }
 
 /* Storage's 3 rows are now scaled up (STORAGE_SCALE) enough to fill a
    shorter sheet than the shared default budget above. */
 .category-sheet--storage {
-  top: max(22vh, calc(100vh - 440px));
+  top: max(16vh, calc(100vh - 500px));
 }
 
 /* Recycling has only one short block of content (icon + one sentence), so it
