@@ -58,6 +58,12 @@ const KOSHER_SCALE = 0.94
 const KOSHER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 
+// Manufacturer body: one icon + a two-pair (label/detail) text block — much
+// simpler than kosher's 3 rows, so it starts at the raw Figma-to-cqw
+// conversion with no extra scale-down (add one only if verification shows
+// overflow).
+const MANUFACTURER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW
+
 function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
 
@@ -347,6 +353,47 @@ function KosherBody({ data, fontStep, iconScale }) {
   )
 }
 
+function ManufacturerBody({ data, fontStep, iconScale }) {
+  const fontPx = (baseCqw) => `max(10px, calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px))`
+  const textStyle = { fontSize: fontPx(MANUFACTURER_TEXT_BASE_CQW) }
+
+  // Both label lines need bold (not just the block's first line), so this
+  // is explicit per-paragraph styling rather than the kosher rows' generic
+  // `p:first-child` CSS rule — same reasoning as the ouDairy special case.
+  const pair = (labelDetail) => (
+    <div className="category-sheet__manufacturer-pair">
+      <p style={{ fontWeight: 700 }}>{labelDetail.label}</p>
+      {labelDetail.detail.map((line) => (
+        <p key={line} style={{ fontWeight: 400 }}>
+          {line}
+        </p>
+      ))}
+    </div>
+  )
+
+  return (
+    <div className="category-sheet__manufacturer">
+      <div className="category-sheet__manufacturer-row">
+        {/* See .claude/skills/rtl-icon-text-order — icon always reads first
+            (DOM order: icon, then text), in every language. */}
+        <img
+          src={data.icon.icon}
+          alt=""
+          className={`category-sheet__manufacturer-icon${data.icon.invertOnHighContrast ? ' category-sheet__manufacturer-icon--invertible' : ''}`}
+          style={{
+            width: `${data.icon.iconWidth * FIGMA_PX_TO_CQW * iconScale}cqw`,
+            height: `${data.icon.iconHeight * FIGMA_PX_TO_CQW * iconScale}cqw`,
+          }}
+        />
+        <div className="category-sheet__manufacturer-text" style={textStyle}>
+          {pair(data.producedBy)}
+          {pair(data.contact)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
   if (matches.length === 0) return null
@@ -366,6 +413,7 @@ export default function CategorySheet({
   bodyIcons,
   bodyNutrition,
   bodyKosher,
+  bodyManufacturer,
 }) {
   const { t, dir } = useLanguage()
   const [dragY, setDragY] = useState(0)
@@ -425,6 +473,11 @@ export default function CategorySheet({
           `${bodyKosher.supervision.line1} ${bodyKosher.supervision.line2}`,
           ...bodyKosher.rows.map((row) => [row.line1, row.line2, row.line3].filter(Boolean).join(' ')),
         ].join(', ')
+      : bodyManufacturer
+      ? [
+          `${bodyManufacturer.producedBy.label} ${bodyManufacturer.producedBy.detail.join(' ')}`,
+          `${bodyManufacturer.contact.label} ${bodyManufacturer.contact.detail.join(' ')}`,
+        ].join(', ')
       : bodyIcons
       ? bodyIcons.map((item) => item.label).join(', ')
       : bodyText
@@ -469,7 +522,7 @@ export default function CategorySheet({
         aria-hidden="true"
       />
       <div
-        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${bodyKosher ? ' category-sheet--kosher' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
+        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${bodyKosher ? ' category-sheet--kosher' : ''}${bodyManufacturer ? ' category-sheet--manufacturer' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
         style={dragging ? { transform: `translateY(${dragY}px)`, transition: 'none' } : undefined}
         role="dialog"
         aria-modal="true"
@@ -483,7 +536,11 @@ export default function CategorySheet({
           onPointerCancel={handlePointerUp}
         >
           <div className="category-sheet__handle" />
-          <h2 className="category-sheet__title">{title}</h2>
+          {/* Zero-width space after "/" lets long slash-separated titles (e.g.
+              manufacturer's "Manufacturer/Importer/Distributor details") wrap
+              at a slash instead of overflowing the sheet — same treatment
+              CategoryChip/CategoryListRow already use for their labels. */}
+          <h2 className="category-sheet__title">{title.replaceAll('/', '/​')}</h2>
           {subtitle && <p className="category-sheet__subtitle">{subtitle}</p>}
         </div>
 
@@ -557,6 +614,8 @@ export default function CategorySheet({
             <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
           ) : bodyKosher ? (
             <KosherBody data={bodyKosher} fontStep={fontStep} iconScale={iconScale} />
+          ) : bodyManufacturer ? (
+            <ManufacturerBody data={bodyManufacturer} fontStep={fontStep} iconScale={iconScale} />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]

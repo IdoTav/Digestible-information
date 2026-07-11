@@ -58,6 +58,13 @@
   top: max(2vh, calc(100vh - 695px));
 }
 
+/* Manufacturer sheet's single icon+text row is short at fontStep 0 (fits the
+   default budget), but overflows by ~30px at the font stepper's max (+3) —
+   a small bump absorbs that without affecting ingredients/allergens. */
+.category-sheet--manufacturer {
+  top: max(8vh, calc(100vh - 535px));
+}
+
 .category-sheet--high-contrast {
   --sheet-bg: #000;
   --sheet-fg: #fff;
@@ -609,4 +616,48 @@
   border-radius: 6px;
   padding: 0.15em 0.5em;
   margin-top: 0.1em;
+}
+
+.category-sheet__manufacturer {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  padding-top: 6px;
+}
+
+.category-sheet__manufacturer-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6%;
+}
+
+.category-sheet__manufacturer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  color: var(--sheet-fg);
+  text-align: center;
+  transition: color 0.25s ease;
+}
+
+.category-sheet__manufacturer-pair p {
+  margin: 0;
+  /* Overrides .category-sheet__body p's fixed 24px — without this, these
+     paragraphs ignore the row's own fontStep-driven inline font-size and the
+     text stops scaling with the font stepper (icon still would). */
+  font-size: inherit;
+  line-height: 1.3;
+}
+
+.category-sheet__manufacturer-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* The factory icon is black line-art on a transparent background — invert it
+   in high contrast so it stays visible against the sheet's black background,
+   same precedent as the kosher icons. */
+.category-sheet--high-contrast .category-sheet__manufacturer-icon--invertible {
+  filter: invert(1);
 }

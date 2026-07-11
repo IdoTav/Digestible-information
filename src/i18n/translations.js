@@ -54,6 +54,14 @@ export const translations = {
       ouDairy: { line1: 'Orthodox', line2Bold: 'Union', line2Light: '- Dairy' },
       rabbinicalSeal: { line1: 'חלבי', line2: 'חלב ישראל בהשגחה', line3: 'משעת חליבה' },
     },
+    manufacturerTitle: 'פרטי יצרן/יבואן/משווק',
+    manufacturerInfo: {
+      producedBy: {
+        label: 'מיוצר על ידי:',
+        detail: ['שטראוס גרופ בע״מ,', 'שד׳ מנחם אריאב 10,', 'נוף הגליל.'],
+      },
+      contact: { label: 'ליצירת קשר:', detail: ['שירות לקוחות', 'שטראוס 6860*'] },
+    },
     categories: {
       ingredients: 'רשימת הרכיבים',
       allergens: 'מידע על אלרגנים',
@@ -119,6 +127,14 @@ export const translations = {
       ouDairy: { line1: 'Orthodox', line2Bold: 'Union', line2Light: '- Dairy' },
       rabbinicalSeal: { line1: 'Dairy', line2: 'Israeli milk, supervised', line3: 'from time of milking' },
     },
+    manufacturerTitle: 'Manufacturer/Importer/Distributor details',
+    manufacturerInfo: {
+      producedBy: {
+        label: 'Manufactured by:',
+        detail: ['Strauss Group Ltd.,', '10 Menachem Ariav St.,', 'Nof HaGalil.'],
+      },
+      contact: { label: 'For contact:', detail: ['Customer service', 'Strauss *6860'] },
+    },
     categories: {
       ingredients: 'Ingredients list',
       allergens: 'Allergen info',
@@ -182,6 +198,14 @@ export const translations = {
       dairySupervision: { line1: 'حليب إسرائيلي', line2: 'تحت إشراف حاخامية نوف هجليل' },
       ouDairy: { line1: 'Orthodox', line2Bold: 'Union', line2Light: '- Dairy' },
       rabbinicalSeal: { line1: 'ألبان', line2: 'حليب إسرائيلي تحت إشراف', line3: 'منذ لحظة الحلب' },
+    },
+    manufacturerTitle: 'تفاصيل المصنّع/المستورد/الموزّع',
+    manufacturerInfo: {
+      producedBy: {
+        label: 'تصنيع:',
+        detail: ['شتراوس جروب المحدودة،', 'شارع مناحيم أرياف 10،', 'نوف هجليل.'],
+      },
+      contact: { label: 'للتواصل:', detail: ['خدمة عملاء', 'شتراوس 6860*'] },
     },
     categories: {
       ingredients: 'قائمة المكونات',

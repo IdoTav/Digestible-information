@@ -10,6 +10,7 @@ import { categories } from '../data/categories.js'
 import { allergenIcons } from '../data/allergenIcons.js'
 import { nutritionStatCards, nutritionTableRowIds, nutritionSugarBoxIcons } from '../data/nutritionFacts.js'
 import { kosherRows, kosherBadgeSwatchColor } from '../data/kosherInfo.js'
+import { manufacturerBodyIcon } from '../data/manufacturerInfo.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
@@ -19,7 +20,7 @@ const LANGUAGES = [
   { code: 'he', label: 'עברית', dir: 'rtl' },
 ]
 
-const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher'])
+const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher', 'manufacturer'])
 const primaryCategories = categories.filter((category) => category.group === 'primary')
 const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
@@ -154,7 +155,12 @@ export default function HomeScreen() {
 
           <div className="category-list">
             {secondaryCategories.map((category) => (
-              <CategoryListRow key={category.id} {...category} label={t.categories[category.id]} />
+              <CategoryListRow
+                key={category.id}
+                {...category}
+                label={t.categories[category.id]}
+                onClick={SHEET_CATEGORIES.has(category.id) ? () => setOpenSheet(category.id) : undefined}
+              />
             ))}
           </div>
 
@@ -226,6 +232,17 @@ export default function HomeScreen() {
           badge: t.kosherInfo.dairyBadge,
           supervision: t.kosherInfo.dairySupervision,
           rows: kosherRows.map((row) => ({ ...row, ...t.kosherInfo[row.id] })),
+        }}
+      />
+
+      <CategorySheet
+        open={openSheet === 'manufacturer'}
+        onClose={() => setOpenSheet(null)}
+        title={t.manufacturerTitle}
+        bodyManufacturer={{
+          icon: manufacturerBodyIcon,
+          producedBy: t.manufacturerInfo.producedBy,
+          contact: t.manufacturerInfo.contact,
         }}
       />
 
