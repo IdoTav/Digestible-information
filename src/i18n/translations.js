@@ -137,7 +137,7 @@ export const translations = {
     kosherTitle: 'Kosher',
     kosherInfo: {
       dairyBadge: { top: 'Kosher', bottom: 'Dairy' },
-      dairySupervision: { line1: 'Israeli milk', line2: 'Nof HaGalil Rabbinate supervision' },
+      dairySupervision: { line1: 'Israeli milk', line2: 'Nof HaGalil Rabbinate', line3: 'supervision' },
       ouDairy: { line1: 'Orthodox', line2Bold: 'Union', line2Light: '- Dairy' },
       rabbinicalSeal: { line1: 'Dairy', line2: 'Israeli milk, supervised', line3: 'from time of milking' },
     },
@@ -223,7 +223,7 @@ export const translations = {
     kosherTitle: 'كوشر',
     kosherInfo: {
       dairyBadge: { top: 'كوشير', bottom: 'ألبان' },
-      dairySupervision: { line1: 'حليب إسرائيلي', line2: 'تحت إشراف حاخامية نوف هجليل' },
+      dairySupervision: { line1: 'حليب إسرائيلي', line2: 'تحت إشراف', line3: 'حاخامية نوف هجليل' },
       ouDairy: { line1: 'Orthodox', line2Bold: 'Union', line2Light: '- Dairy' },
       rabbinicalSeal: { line1: 'ألبان', line2: 'حليب إسرائيلي تحت إشراف', line3: 'منذ لحظة الحلب' },
     },
