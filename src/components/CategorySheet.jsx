@@ -544,7 +544,14 @@ export default function CategorySheet({
       ? [
           `${bodyKosher.badge.top} ${bodyKosher.badge.bottom}`,
           `${bodyKosher.supervision.line1} ${bodyKosher.supervision.line2}`,
-          ...bodyKosher.rows.map((row) => [row.line1, row.line2, row.line3].filter(Boolean).join(' ')),
+          // ouDairy uses line2Bold/line2Light instead of line2/line3 (see KosherBody's
+          // rendering split below) — read those too, or its "Union - Dairy" half gets
+          // silently dropped from speech.
+          ...bodyKosher.rows.map((row) =>
+            row.line2Bold
+              ? [row.line1, row.line2Bold, row.line2Light].filter(Boolean).join(' ')
+              : [row.line1, row.line2, row.line3].filter(Boolean).join(' '),
+          ),
         ].join(', ')
       : bodyManufacturer
       ? [
