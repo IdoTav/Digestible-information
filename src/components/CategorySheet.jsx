@@ -260,7 +260,7 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
   )
 }
 
-function KosherBody({ data, fontStep, iconScale, dir }) {
+function KosherBody({ data, fontStep, iconScale }) {
   // KOSHER_TEXT_BASE_CQW/KOSHER_BADGE_TEXT_BASE_CQW are scaled down (via
   // KOSHER_SCALE) to fit the body without overflow at fontStep 0 — but the
   // font stepper's -3px-per-step is a fixed amount, so at MIN_FONT_STEP that
@@ -299,17 +299,8 @@ function KosherBody({ data, fontStep, iconScale, dir }) {
   return (
     <div className="category-sheet__kosher">
       <div className="category-sheet__kosher-row">
-        {isRtl ? (
-          <>
-            {badge}
-            {supervisionText}
-          </>
-        ) : (
-          <>
-            {supervisionText}
-            {badge}
-          </>
-        )}
+        {badge}
+        {supervisionText}
       </div>
 
       {data.rows.map((row) => {
@@ -333,17 +324,8 @@ function KosherBody({ data, fontStep, iconScale, dir }) {
         )
         return (
           <div key={row.id} className="category-sheet__kosher-row">
-            {isRtl ? (
-              <>
-                {icon}
-                {text}
-              </>
-            ) : (
-              <>
-                {text}
-                {icon}
-              </>
-            )}
+            {icon}
+            {text}
           </div>
         )
       })}
@@ -560,7 +542,7 @@ export default function CategorySheet({
           {bodyNutrition ? (
             <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
           ) : bodyKosher ? (
-            <KosherBody data={bodyKosher} fontStep={fontStep} iconScale={iconScale} dir={dir} />
+            <KosherBody data={bodyKosher} fontStep={fontStep} iconScale={iconScale} />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
