@@ -74,7 +74,6 @@ export const translations = {
         { text: 'עטיפת המוצר', bold: true },
         { text: ' יש להשליך ' },
         { text: 'לפח הכתום', bold: true, highlight: true },
-        { text: '.' },
       ],
     },
     categories: {
@@ -162,7 +161,6 @@ export const translations = {
         { text: 'product wrapper', bold: true },
         { text: ' should be discarded in the ' },
         { text: 'orange bin', bold: true, highlight: true },
-        { text: '.' },
       ],
     },
     categories: {
@@ -249,7 +247,6 @@ export const translations = {
         { text: 'غلاف المنتج', bold: true },
         { text: ' في ' },
         { text: 'السلة البرتقالية', bold: true, highlight: true },
-        { text: '.' },
       ],
     },
     categories: {

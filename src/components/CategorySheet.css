@@ -47,7 +47,7 @@
    sugar box), so it gets a taller budget — starts higher up the screen —
    without affecting the ingredients/allergens sheets. */
 .category-sheet--nutrition {
-  top: max(5vh, calc(100vh - 580px));
+  top: max(5vh, calc(100vh - 560px));
 }
 
 /* Kosher sheet has 3 stacked certification rows — sized to fit without
@@ -55,7 +55,7 @@
    max (+3), which needs noticeably more room since KOSHER_SCALE is high
    enough now to make the +3 step's larger text/icons overflow a tighter budget. */
 .category-sheet--kosher {
-  top: max(2vh, calc(100vh - 695px));
+  top: max(8vh, calc(100vh - 620px));
 }
 
 /* Manufacturer's text is now scaled up (MANUFACTURER_SCALE) enough to fill a
@@ -567,7 +567,7 @@
 .category-sheet__kosher-row {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 3%;
 }
 
@@ -737,4 +737,7 @@
   transition: color 0.25s ease;
   max-width: 85%;
   text-align: center;
+  /* Overrides .category-sheet__body p's 1.7 — too much space between this
+     paragraph's wrapped lines at this larger font size. */
+  line-height: 1.3;
 }
