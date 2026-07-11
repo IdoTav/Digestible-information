@@ -560,6 +560,10 @@
 
 .category-sheet__kosher-row-text p {
   margin: 0;
+  /* Overrides .category-sheet__body p's fixed 24px — without this, these
+     paragraphs ignore the row's own fontStep-driven inline font-size and the
+     text stops scaling with the font stepper (icons/images still would). */
+  font-size: inherit;
   line-height: 1.3;
 }
 

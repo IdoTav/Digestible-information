@@ -260,39 +260,67 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
   )
 }
 
-function KosherBody({ data, fontStep, iconScale }) {
-  const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
+function KosherBody({ data, fontStep, iconScale, dir }) {
+  // KOSHER_TEXT_BASE_CQW/KOSHER_BADGE_TEXT_BASE_CQW are scaled down (via
+  // KOSHER_SCALE) to fit the body without overflow at fontStep 0 — but the
+  // font stepper's -3px-per-step is a fixed amount, so at MIN_FONT_STEP that
+  // fixed subtraction shrinks a small base disproportionately (unlike the
+  // icons, which scale by a multiplier and shrink smoothly by comparison).
+  // Floor it so the smallest step stays legible instead of nearly invisible.
+  const fontPx = (baseCqw) => `max(10px, calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px))`
   const textStyle = { fontSize: fontPx(KOSHER_TEXT_BASE_CQW) }
+  // See .claude/skills/rtl-icon-text-order — icon always reads first (DOM
+  // order: icon, then text), in every language. Natural dir-mirroring then
+  // puts it on the correct side per direction: left in ltr (English), right
+  // in rtl (Hebrew/Arabic) — no per-direction branching needed here.
+
+  const supervisionText = (
+    <div className="category-sheet__kosher-row-text" style={textStyle}>
+      <p>{data.supervision.line1}</p>
+      <p>{data.supervision.line2}</p>
+    </div>
+  )
+  // One-off text+swatch layout (not a repeatable icon), so it's rendered
+  // directly here rather than driven from data.rows like the other two.
+  const badge = (
+    <div className="category-sheet__kosher-badge">
+      <span className="category-sheet__kosher-badge-label" style={{ fontSize: fontPx(KOSHER_BADGE_TEXT_BASE_CQW) }}>
+        {data.badge.top}
+      </span>
+      <span
+        className="category-sheet__kosher-badge-swatch"
+        style={{ fontSize: fontPx(KOSHER_BADGE_TEXT_BASE_CQW), background: data.badgeSwatchColor }}
+      >
+        {data.badge.bottom}
+      </span>
+    </div>
+  )
 
   return (
     <div className="category-sheet__kosher">
       <div className="category-sheet__kosher-row">
-        <div className="category-sheet__kosher-row-text" style={textStyle}>
-          <p>{data.supervision.line1}</p>
-          <p>{data.supervision.line2}</p>
-        </div>
-        {/* One-off text+swatch layout (not a repeatable icon), so it's rendered
-            directly here rather than driven from data.rows like the other two. */}
-        <div className="category-sheet__kosher-badge">
-          <span className="category-sheet__kosher-badge-label" style={{ fontSize: fontPx(KOSHER_BADGE_TEXT_BASE_CQW) }}>
-            {data.badge.top}
-          </span>
-          <span
-            className="category-sheet__kosher-badge-swatch"
-            style={{ fontSize: fontPx(KOSHER_BADGE_TEXT_BASE_CQW), background: data.badgeSwatchColor }}
-          >
-            {data.badge.bottom}
-          </span>
-        </div>
+        {isRtl ? (
+          <>
+            {badge}
+            {supervisionText}
+          </>
+        ) : (
+          <>
+            {supervisionText}
+            {badge}
+          </>
+        )}
       </div>
 
-      {data.rows.map((row) => (
-        <div key={row.id} className="category-sheet__kosher-row">
+      {data.rows.map((row) => {
+        const text = (
           <div className="category-sheet__kosher-row-text" style={textStyle} dir={row.forceLtrText ? 'ltr' : undefined}>
             <p>{row.line1}</p>
             {row.line2 && <p>{row.line2}</p>}
             {row.line3 && <p>{row.line3}</p>}
           </div>
+        )
+        const icon = (
           <img
             src={row.icon}
             alt=""
@@ -302,8 +330,23 @@ function KosherBody({ data, fontStep, iconScale }) {
               height: `${row.iconHeight * FIGMA_PX_TO_CQW * KOSHER_SCALE * iconScale}cqw`,
             }}
           />
-        </div>
-      ))}
+        )
+        return (
+          <div key={row.id} className="category-sheet__kosher-row">
+            {isRtl ? (
+              <>
+                {icon}
+                {text}
+              </>
+            ) : (
+              <>
+                {text}
+                {icon}
+              </>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -517,7 +560,7 @@ export default function CategorySheet({
           {bodyNutrition ? (
             <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
           ) : bodyKosher ? (
-            <KosherBody data={bodyKosher} fontStep={fontStep} iconScale={iconScale} />
+            <KosherBody data={bodyKosher} fontStep={fontStep} iconScale={iconScale} dir={dir} />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
