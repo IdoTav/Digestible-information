@@ -62,13 +62,13 @@ const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 // simpler than kosher's 3 rows, so it starts at the raw Figma-to-cqw
 // conversion with only a small scale-up for a bit more presence (the sheet's
 // own height budget already accounts for this — see .category-sheet--manufacturer).
-const MANUFACTURER_SCALE = 1.15
+const MANUFACTURER_SCALE = 1.4
 const MANUFACTURER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * MANUFACTURER_SCALE
 
 // Storage body: a heading (rendered via the generic bodyHeading prop, same as
 // allergens) plus 3 short icon+label rows — the simplest body yet, so no
 // scale adjustment to start with.
-const STORAGE_SCALE = 1.2
+const STORAGE_SCALE = 1.6
 const STORAGE_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * STORAGE_SCALE
 
 // Recycling body: one centered icon plus one short sentence below it — sized
