@@ -9,6 +9,7 @@ import ImageLightbox from '../components/ImageLightbox.jsx'
 import { categories } from '../data/categories.js'
 import { allergenIcons } from '../data/allergenIcons.js'
 import { nutritionStatCards, nutritionTableRowIds, nutritionSugarBoxIcons } from '../data/nutritionFacts.js'
+import { kosherRows, kosherBadgeSwatchColor } from '../data/kosherInfo.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
@@ -18,7 +19,7 @@ const LANGUAGES = [
   { code: 'he', label: 'עברית', dir: 'rtl' },
 ]
 
-const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition'])
+const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher'])
 const primaryCategories = categories.filter((category) => category.group === 'primary')
 const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
@@ -213,6 +214,18 @@ export default function HomeScreen() {
             sugar: { ...nutritionSugarBoxIcons.sugar, ...t.nutritionFacts.sugar },
             teaspoons: { ...nutritionSugarBoxIcons.teaspoons, ...t.nutritionFacts.teaspoons },
           },
+        }}
+      />
+
+      <CategorySheet
+        open={openSheet === 'kosher'}
+        onClose={() => setOpenSheet(null)}
+        title={t.kosherTitle}
+        bodyKosher={{
+          badgeSwatchColor: kosherBadgeSwatchColor,
+          badge: t.kosherInfo.dairyBadge,
+          supervision: t.kosherInfo.dairySupervision,
+          rows: kosherRows.map((row) => ({ ...row, ...t.kosherInfo[row.id] })),
         }}
       />
 

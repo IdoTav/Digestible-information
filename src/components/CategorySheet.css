@@ -50,6 +50,13 @@
   top: max(5vh, calc(100vh - 580px));
 }
 
+/* Kosher sheet has 3 stacked certification rows — a modest bump over the
+   default budget (ingredients/allergens), now that KOSHER_SCALE keeps the
+   content itself compact enough to fit without scrolling on open. */
+.category-sheet--kosher {
+  top: max(7vh, calc(100vh - 585px));
+}
+
 .category-sheet--high-contrast {
   --sheet-bg: #000;
   --sheet-fg: #fff;
@@ -523,4 +530,72 @@
   font-weight: 600;
   white-space: nowrap;
   transition: font-size 0.15s ease;
+}
+
+.category-sheet__kosher {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  /* ~64px gap between rows in the Figma reference, converted via the same
+     393px-frame/16px-margin ratio as the nutrition body's FIGMA_PX_TO_CQW,
+     then scaled down to match KOSHER_SCALE so the whole body fits on open
+     without needing to scroll first. */
+  gap: 12.7cqw;
+  padding-top: 6px;
+}
+
+.category-sheet__kosher-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3.5%;
+}
+
+.category-sheet__kosher-row-text {
+  color: var(--sheet-fg);
+  font-weight: 600;
+  text-align: start;
+  transition: color 0.25s ease;
+}
+
+.category-sheet__kosher-row-text p {
+  margin: 0;
+  line-height: 1.3;
+}
+
+.category-sheet__kosher-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* The OU-D mark and the rabbinical seal are black line-art on transparent
+   backgrounds — invert them in high contrast so they stay visible against the
+   sheet's black background. The badge swatch below is a fixed brand color and
+   deliberately excluded from this treatment (same precedent as nutrition's
+   colored stat cards, which also don't invert). */
+.category-sheet--high-contrast .category-sheet__kosher-icon--invertible {
+  filter: invert(1);
+}
+
+.category-sheet__kosher-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.category-sheet__kosher-badge-label {
+  color: var(--sheet-fg);
+  font-weight: 700;
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.category-sheet__kosher-badge-swatch {
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: 6px;
+  padding: 0.15em 0.5em;
+  margin-top: 0.1em;
 }

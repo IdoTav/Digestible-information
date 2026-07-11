@@ -47,6 +47,13 @@ export const translations = {
       sugar: { label: 'סוכרים', amount: "39 גר׳" },
       teaspoons: { label: 'כפיות', amount: '9.75' },
     },
+    kosherTitle: 'כשרות',
+    kosherInfo: {
+      dairyBadge: { top: 'כשר', bottom: 'חלבי' },
+      dairySupervision: { line1: 'חלב ישראל', line2: 'בהשגחת הרבנות נוף הגליל' },
+      ouDairy: { line1: 'Orthodox Union', line2: '- Dairy' },
+      rabbinicalSeal: { line1: 'חלבי', line2: 'חלב ישראל בהשגחה', line3: 'משעת חליבה' },
+    },
     categories: {
       ingredients: 'רשימת הרכיבים',
       allergens: 'מידע על אלרגנים',
@@ -105,6 +112,13 @@ export const translations = {
       sugar: { label: 'Sugars', amount: '39 g' },
       teaspoons: { label: 'Teaspoons', amount: '9.75' },
     },
+    kosherTitle: 'Kosher',
+    kosherInfo: {
+      dairyBadge: { top: 'Kosher', bottom: 'Dairy' },
+      dairySupervision: { line1: 'Israeli milk', line2: 'Nof HaGalil Rabbinate supervision' },
+      ouDairy: { line1: 'Orthodox Union', line2: '- Dairy' },
+      rabbinicalSeal: { line1: 'Dairy', line2: 'Israeli milk, supervised', line3: 'from time of milking' },
+    },
     categories: {
       ingredients: 'Ingredients list',
       allergens: 'Allergen info',
@@ -161,6 +175,13 @@ export const translations = {
       protein: { label: 'البروتين', amount: '4.7 غ' },
       sugar: { label: 'السكريات', amount: '39 غ' },
       teaspoons: { label: 'ملاعق صغيرة', amount: '9.75' },
+    },
+    kosherTitle: 'كوشر',
+    kosherInfo: {
+      dairyBadge: { top: 'كوشير', bottom: 'ألبان' },
+      dairySupervision: { line1: 'حليب إسرائيلي', line2: 'تحت إشراف حاخامية نوف هجليل' },
+      ouDairy: { line1: 'Orthodox Union', line2: '- Dairy' },
+      rabbinicalSeal: { line1: 'ألبان', line2: 'حليب إسرائيلي تحت إشراف', line3: 'منذ لحظة الحلب' },
     },
     categories: {
       ingredients: 'قائمة المكونات',

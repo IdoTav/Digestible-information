@@ -49,6 +49,15 @@ const SUGAR_BOX_VALUE_BASE_CQW = STAT_CARD_VALUE_BASE_CQW
 // under "סך השומנים"), so their labels get an extra inline-start margin.
 const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
 
+// Kosher body: 3 certification rows (text + icon/badge), sized off the same
+// Figma frame/conversion as the nutrition body above. The raw Figma sizes
+// overflowed the sheet on first open (before any manual scrolling), so
+// everything here is scaled down from that 1:1 conversion, same idea as
+// nutrition's FACT_TABLE_FONT_SCALE.
+const KOSHER_SCALE = 0.62
+const KOSHER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * KOSHER_SCALE
+const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
+
 function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
 
@@ -251,6 +260,54 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
   )
 }
 
+function KosherBody({ data, fontStep, iconScale }) {
+  const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
+  const textStyle = { fontSize: fontPx(KOSHER_TEXT_BASE_CQW) }
+
+  return (
+    <div className="category-sheet__kosher">
+      <div className="category-sheet__kosher-row">
+        <div className="category-sheet__kosher-row-text" style={textStyle}>
+          <p>{data.supervision.line1}</p>
+          <p>{data.supervision.line2}</p>
+        </div>
+        {/* One-off text+swatch layout (not a repeatable icon), so it's rendered
+            directly here rather than driven from data.rows like the other two. */}
+        <div className="category-sheet__kosher-badge">
+          <span className="category-sheet__kosher-badge-label" style={{ fontSize: fontPx(KOSHER_BADGE_TEXT_BASE_CQW) }}>
+            {data.badge.top}
+          </span>
+          <span
+            className="category-sheet__kosher-badge-swatch"
+            style={{ fontSize: fontPx(KOSHER_BADGE_TEXT_BASE_CQW), background: data.badgeSwatchColor }}
+          >
+            {data.badge.bottom}
+          </span>
+        </div>
+      </div>
+
+      {data.rows.map((row) => (
+        <div key={row.id} className="category-sheet__kosher-row">
+          <div className="category-sheet__kosher-row-text" style={textStyle} dir={row.forceLtrText ? 'ltr' : undefined}>
+            <p>{row.line1}</p>
+            {row.line2 && <p>{row.line2}</p>}
+            {row.line3 && <p>{row.line3}</p>}
+          </div>
+          <img
+            src={row.icon}
+            alt=""
+            className={`category-sheet__kosher-icon${row.invertOnHighContrast ? ' category-sheet__kosher-icon--invertible' : ''}`}
+            style={{
+              width: `${row.iconWidth * FIGMA_PX_TO_CQW * KOSHER_SCALE * iconScale}cqw`,
+              height: `${row.iconHeight * FIGMA_PX_TO_CQW * KOSHER_SCALE * iconScale}cqw`,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
   if (matches.length === 0) return null
@@ -269,6 +326,7 @@ export default function CategorySheet({
   bodyText,
   bodyIcons,
   bodyNutrition,
+  bodyKosher,
 }) {
   const { t, dir } = useLanguage()
   const [dragY, setDragY] = useState(0)
@@ -322,6 +380,12 @@ export default function CategorySheet({
           factToSpeech(bodyNutrition.sugarBox.sugar),
           factToSpeech(bodyNutrition.sugarBox.teaspoons),
         ].join(', ')
+      : bodyKosher
+      ? [
+          `${bodyKosher.badge.top} ${bodyKosher.badge.bottom}`,
+          `${bodyKosher.supervision.line1} ${bodyKosher.supervision.line2}`,
+          ...bodyKosher.rows.map((row) => [row.line1, row.line2, row.line3].filter(Boolean).join(' ')),
+        ].join(', ')
       : bodyIcons
       ? bodyIcons.map((item) => item.label).join(', ')
       : bodyText
@@ -366,7 +430,7 @@ export default function CategorySheet({
         aria-hidden="true"
       />
       <div
-        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
+        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${bodyKosher ? ' category-sheet--kosher' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
         style={dragging ? { transform: `translateY(${dragY}px)`, transition: 'none' } : undefined}
         role="dialog"
         aria-modal="true"
@@ -452,6 +516,8 @@ export default function CategorySheet({
           )}
           {bodyNutrition ? (
             <NutritionBody data={bodyNutrition} fontStep={fontStep} iconScale={iconScale} dir={dir} />
+          ) : bodyKosher ? (
+            <KosherBody data={bodyKosher} fontStep={fontStep} iconScale={iconScale} />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]
