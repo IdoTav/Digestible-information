@@ -65,6 +65,12 @@
   top: max(3vh, calc(100vh - 640px));
 }
 
+/* Recycling has only one short block of content (icon + one sentence), so it
+   gets the shortest budget of any sheet — starts much lower than the others. */
+.category-sheet--recycling {
+  top: max(15vh, calc(100vh - 560px));
+}
+
 .category-sheet--high-contrast {
   --sheet-bg: #000;
   --sheet-fg: #fff;
@@ -697,4 +703,32 @@
    high contrast so they stay visible against the sheet's black background. */
 .category-sheet--high-contrast .category-sheet__storage-icon--invertible {
   filter: invert(1);
+}
+
+.category-sheet__recycling {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4%;
+  padding-top: 6px;
+  text-align: center;
+}
+
+.category-sheet__recycling-icon {
+  display: block;
+}
+
+.category-sheet--high-contrast .category-sheet__recycling-icon--invertible {
+  filter: invert(1);
+}
+
+/* Two classes to out-specificity the .category-sheet__body p default of
+   text-align: start (a class + type selector), which otherwise wins over a
+   single-class selector regardless of source order. */
+.category-sheet__recycling .category-sheet__recycling-text {
+  color: var(--sheet-fg);
+  transition: color 0.25s ease;
+  max-width: 85%;
+  text-align: center;
 }

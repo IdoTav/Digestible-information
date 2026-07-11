@@ -12,6 +12,7 @@ import { nutritionStatCards, nutritionTableRowIds, nutritionSugarBoxIcons } from
 import { kosherRows, kosherBadgeSwatchColor } from '../data/kosherInfo.js'
 import { manufacturerBodyIcon } from '../data/manufacturerInfo.js'
 import { storageRows } from '../data/storageInfo.js'
+import { recyclingBodyIcon } from '../data/recyclingInfo.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
@@ -21,7 +22,7 @@ const LANGUAGES = [
   { code: 'he', label: 'עברית', dir: 'rtl' },
 ]
 
-const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher', 'manufacturer', 'storage'])
+const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher', 'manufacturer', 'storage', 'recycling'])
 const primaryCategories = categories.filter((category) => category.group === 'primary')
 const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
@@ -254,6 +255,16 @@ export default function HomeScreen() {
         bodyHeading={t.storageInfo.heading}
         bodyStorage={{
           rows: storageRows.map((row) => ({ ...row, label: t.storageInfo.labels[row.id] })),
+        }}
+      />
+
+      <CategorySheet
+        open={openSheet === 'recycling'}
+        onClose={() => setOpenSheet(null)}
+        title={t.recyclingTitle}
+        bodyRecycling={{
+          ...recyclingBodyIcon,
+          segments: t.recyclingInfo.segments,
         }}
       />
 

@@ -71,6 +71,12 @@ const MANUFACTURER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * MANUFACTURER_SCALE
 const STORAGE_SCALE = 1.2
 const STORAGE_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * STORAGE_SCALE
 
+// Recycling body: one centered icon plus one short sentence below it — sized
+// off the same Figma-frame conversion as storage, scaled up since there's
+// only this one short block of content to fill the sheet with.
+const RECYCLING_SCALE = 1.2
+const RECYCLING_TEXT_BASE_CQW = 24 * FIGMA_PX_TO_CQW * RECYCLING_SCALE
+
 function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
 
@@ -428,6 +434,37 @@ function StorageBody({ data, fontStep, iconScale }) {
   )
 }
 
+function RecyclingBody({ data, fontStep, iconScale }) {
+  const fontPx = (baseCqw) => `max(10px, calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px))`
+
+  return (
+    <div className="category-sheet__recycling">
+      <img
+        src={data.icon}
+        alt=""
+        className={`category-sheet__recycling-icon${data.invertOnHighContrast ? ' category-sheet__recycling-icon--invertible' : ''}`}
+        style={{
+          width: `${data.iconWidth * FIGMA_PX_TO_CQW * RECYCLING_SCALE * iconScale}cqw`,
+          height: `${data.iconHeight * FIGMA_PX_TO_CQW * RECYCLING_SCALE * iconScale}cqw`,
+        }}
+      />
+      <p className="category-sheet__recycling-text" style={{ fontSize: fontPx(RECYCLING_TEXT_BASE_CQW) }}>
+        {data.segments.map((segment, index) => (
+          <span
+            key={index}
+            style={{
+              fontWeight: segment.bold ? 700 : 400,
+              color: segment.highlight ? '#EF531E' : undefined,
+            }}
+          >
+            {segment.text}
+          </span>
+        ))}
+      </p>
+    </div>
+  )
+}
+
 function pickBestVoice(voices, langPrefix) {
   const matches = voices.filter((v) => v.lang?.toLowerCase().startsWith(langPrefix))
   if (matches.length === 0) return null
@@ -449,6 +486,7 @@ export default function CategorySheet({
   bodyKosher,
   bodyManufacturer,
   bodyStorage,
+  bodyRecycling,
 }) {
   const { t, dir } = useLanguage()
   const [dragY, setDragY] = useState(0)
@@ -515,6 +553,8 @@ export default function CategorySheet({
         ].join(', ')
       : bodyStorage
       ? bodyStorage.rows.map((row) => row.label).join(', ')
+      : bodyRecycling
+      ? bodyRecycling.segments.map((segment) => segment.text).join('')
       : bodyIcons
       ? bodyIcons.map((item) => item.label).join(', ')
       : bodyText
@@ -559,7 +599,7 @@ export default function CategorySheet({
         aria-hidden="true"
       />
       <div
-        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${bodyKosher ? ' category-sheet--kosher' : ''}${bodyManufacturer ? ' category-sheet--manufacturer' : ''}${bodyStorage ? ' category-sheet--storage' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
+        className={`category-sheet${bodyNutrition ? ' category-sheet--nutrition' : ''}${bodyKosher ? ' category-sheet--kosher' : ''}${bodyManufacturer ? ' category-sheet--manufacturer' : ''}${bodyStorage ? ' category-sheet--storage' : ''}${bodyRecycling ? ' category-sheet--recycling' : ''}${open ? ' category-sheet--open' : ''}${highContrast ? ' category-sheet--high-contrast' : ''}`}
         style={dragging ? { transform: `translateY(${dragY}px)`, transition: 'none' } : undefined}
         role="dialog"
         aria-modal="true"
@@ -655,6 +695,8 @@ export default function CategorySheet({
             <ManufacturerBody data={bodyManufacturer} fontStep={fontStep} iconScale={iconScale} />
           ) : bodyStorage ? (
             <StorageBody data={bodyStorage} fontStep={fontStep} iconScale={iconScale} />
+          ) : bodyRecycling ? (
+            <RecyclingBody data={bodyRecycling} fontStep={fontStep} iconScale={iconScale} />
           ) : bodyIcons ? (
             <div className="category-sheet__icon-grid">
               {[bodyIcons.slice(0, ICONS_PER_ROW), bodyIcons.slice(ICONS_PER_ROW)]

@@ -67,6 +67,16 @@ export const translations = {
       heading: 'יש לשמור במקום:',
       labels: { shaded: 'מוצל', cool: 'קריר', dry: 'יבש' },
     },
+    recyclingTitle: 'מיחזור',
+    recyclingInfo: {
+      segments: [
+        { text: 'את ' },
+        { text: 'עטיפת המוצר', bold: true },
+        { text: ' יש להשליך ' },
+        { text: 'לפח הכתום', bold: true, highlight: true },
+        { text: '.' },
+      ],
+    },
     categories: {
       ingredients: 'רשימת הרכיבים',
       allergens: 'מידע על אלרגנים',
@@ -145,6 +155,16 @@ export const translations = {
       heading: 'Store in a place that is:',
       labels: { shaded: 'Shaded', cool: 'Cool', dry: 'Dry' },
     },
+    recyclingTitle: 'Recycling',
+    recyclingInfo: {
+      segments: [
+        { text: 'The ' },
+        { text: 'product wrapper', bold: true },
+        { text: ' should be discarded in the ' },
+        { text: 'orange bin', bold: true, highlight: true },
+        { text: '.' },
+      ],
+    },
     categories: {
       ingredients: 'Ingredients list',
       allergens: 'Allergen info',
@@ -221,6 +241,16 @@ export const translations = {
     storageInfo: {
       heading: 'يُحفظ في مكان:',
       labels: { shaded: 'مظلل', cool: 'بارد', dry: 'جاف' },
+    },
+    recyclingTitle: 'إعادة التدوير',
+    recyclingInfo: {
+      segments: [
+        { text: 'يجب التخلص من ' },
+        { text: 'غلاف المنتج', bold: true },
+        { text: ' في ' },
+        { text: 'السلة البرتقالية', bold: true, highlight: true },
+        { text: '.' },
+      ],
     },
     categories: {
       ingredients: 'قائمة المكونات',
