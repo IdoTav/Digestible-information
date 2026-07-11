@@ -386,38 +386,75 @@
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
+/* Figma's rows are a tightly-packed block (leading 0.945, no inter-row gap)
+   that's centered as a whole within the card, not spread edge-to-edge — at
+   our smaller multi-language font scale, `space-between` stretched that same
+   block across the full card height, opening up gaps Figma doesn't have. */
 .category-sheet__fact-table-labels,
 .category-sheet__fact-table-values {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 0;
+  justify-content: center;
   min-width: 0;
 }
 
-.category-sheet__fact-table-labels {
+.category-sheet__fact-table-labels-inner,
+.category-sheet__fact-table-values-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-sheet__fact-table-labels-inner {
   position: relative;
 }
 
-/* Visually groups transFat/cholesterol as sub-items of totalFat (Figma's
-   Vector 9): a square bracket sitting just before the two indented rows. */
+/* Visually groups transFat/cholesterol as sub-items of totalFat — traces
+   Figma's Vector 9 (stem + mid-tick + bottom foot, no top foot). top/height
+   are set inline as exact fractions of the row count. */
 .category-sheet__fact-table-sub-bracket {
   position: absolute;
   inset-inline-start: 0;
-  top: 22%;
-  height: 36%;
-  width: 5px;
-  border-top: 1.5px solid var(--sheet-fg);
-  border-bottom: 1.5px solid var(--sheet-fg);
-  border-inline-start: 1.5px solid var(--sheet-fg);
+  /* Matches the indented rows' marginInlineStart so the tick/foot reach the text. */
+  width: 0.8em;
+}
+
+.category-sheet__fact-table-sub-bracket-stem,
+.category-sheet__fact-table-sub-bracket-tick,
+.category-sheet__fact-table-sub-bracket-foot {
+  position: absolute;
+  inset-inline-start: 0;
+  background: var(--sheet-fg);
   opacity: 0.9;
+  transition: background-color 0.25s ease;
+}
+
+.category-sheet__fact-table-sub-bracket-stem {
+  top: 0;
+  bottom: 0;
+  width: 1.25px;
+}
+
+.category-sheet__fact-table-sub-bracket-tick,
+.category-sheet__fact-table-sub-bracket-foot {
+  width: 100%;
+  height: 1.25px;
+}
+
+/* Figma's tick sits partway through the first sub-row, not at the row
+   boundary (measured ~29% down the bracket's own height). */
+.category-sheet__fact-table-sub-bracket-tick {
+  top: 29%;
+}
+
+.category-sheet__fact-table-sub-bracket-foot {
+  bottom: 0;
 }
 
 .category-sheet__fact-table-labels span,
 .category-sheet__fact-table-values span {
   color: var(--sheet-fg);
   font-weight: 600;
-  line-height: 0.945;
+  line-height: 1.15;
   white-space: nowrap;
   transition: color 0.25s ease, font-size 0.15s ease;
 }

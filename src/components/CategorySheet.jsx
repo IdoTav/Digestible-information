@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import contrastInner from '../assets/icons/sheet/contrast-inner.svg'
 import volumeSpeaker from '../assets/icons/sheet/volume-speaker.svg'
 import volumeWave1 from '../assets/icons/sheet/volume-wave1.svg'
@@ -51,6 +51,44 @@ const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
 
 function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
+
+  // The bracket only needs to span whichever indented rows are consecutive in
+  // data.table (transFat/cholesterol) — computed as a fraction of the table's
+  // row count rather than a guessed percentage, so it stays exact regardless
+  // of how many rows the table has or what font scale they're rendered at
+  // (all rows share the same line-height, so each is an equal-height slice).
+  // The two rows' line-boxes include leading below the glyphs, so a full
+  // 2-row-tall bracket overshoots past the actual text — trimmed a quarter
+  // row-height short of the full box to land right at the text instead.
+  const firstIndentedIndex = data.table.findIndex((row) => FACT_TABLE_INDENTED_ROW_IDS.has(row.id))
+  const indentedRowCount = data.table.filter((row) => FACT_TABLE_INDENTED_ROW_IDS.has(row.id)).length
+  const bracketTopPct = (100 * firstIndentedIndex) / data.table.length
+  const bracketHeightPct = (100 * (indentedRowCount - 0.25)) / data.table.length
+
+  // The stem is horizontally centered under the parent row's ("totalFat") first
+  // word in every language — measured live since word width depends entirely on
+  // the font/language and isn't a fixed em value. The indented rows' own margin
+  // is pushed out by that same measurement (plus the original 0.8em reach) so
+  // the tick/foot always have room to connect the stem to the text without
+  // ever overlapping it, no matter how wide that first word is.
+  const parentRow = data.table[firstIndentedIndex - 1]
+  const [parentFirstWord, ...parentRestWords] = parentRow.label.split(' ')
+  const parentRest = parentRestWords.join(' ')
+  const firstWordRef = useRef(null)
+  const [firstWordWidthPx, setFirstWordWidthPx] = useState(0)
+
+  useLayoutEffect(() => {
+    const el = firstWordRef.current
+    if (!el) return
+    const measure = () => setFirstWordWidthPx(el.getBoundingClientRect().width)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [parentFirstWord, fontStep])
+
+  const stemCenterPx = firstWordWidthPx / 2
+  const indentMarginStyle = `calc(${stemCenterPx}px + 0.8em)`
 
   // flexbox (not inline-text bidi) so value-then-unit order is fixed by DOM
   // order + the `direction` below, regardless of what characters the unit
@@ -117,26 +155,67 @@ function NutritionBody({ data, fontStep, iconScale, dir }) {
       <div className="category-sheet__fact-row" dir="ltr">
         <div className="category-sheet__fact-table" dir={dir}>
           <div className="category-sheet__fact-table-labels">
-            <span className="category-sheet__fact-table-sub-bracket" aria-hidden="true" />
-            {data.table.map((row) => (
+            <div className="category-sheet__fact-table-labels-inner">
               <span
-                key={row.id}
+                className="category-sheet__fact-table-sub-bracket"
+                aria-hidden="true"
                 style={{
+                  top: `${bracketTopPct}%`,
+                  height: `${bracketHeightPct}%`,
+                  // Same font-size as the rows, so the CSS width (0.8em) matches the
+                  // rows' marginInlineStart exactly and the tick/foot reach the text.
                   fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW),
-                  marginInlineStart: FACT_TABLE_INDENTED_ROW_IDS.has(row.id) ? '0.8em' : 0,
                 }}
               >
-                {row.label}
+                {/* Plain CSS lines (not an SVG) so the stem/tick/foot render at the
+                    exact same fixed thickness — an SVG stretched non-uniformly to fit
+                    (via preserveAspectRatio="none") renders anisotropic strokes, making
+                    the horizontal ticks look bolder than the vertical stem. */}
+                <span
+                  className="category-sheet__fact-table-sub-bracket-stem"
+                  style={{ insetInlineStart: `${stemCenterPx - 0.625}px` }}
+                />
+                {/* Tick/foot always reach from the stem's position (wherever the first
+                    word's width puts it) over to the indented text — a fixed 0.8em
+                    beyond the stem, matching how far out that text's own margin starts. */}
+                <span
+                  className="category-sheet__fact-table-sub-bracket-tick"
+                  style={{ insetInlineStart: `${stemCenterPx}px`, width: '0.8em' }}
+                />
+                <span
+                  className="category-sheet__fact-table-sub-bracket-foot"
+                  style={{ insetInlineStart: `${stemCenterPx}px`, width: '0.8em' }}
+                />
               </span>
-            ))}
+              {data.table.map((row, index) => (
+                <span
+                  key={row.id}
+                  style={{
+                    fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW),
+                    marginInlineStart: FACT_TABLE_INDENTED_ROW_IDS.has(row.id) ? indentMarginStyle : 0,
+                  }}
+                >
+                  {index === firstIndentedIndex - 1 ? (
+                    <>
+                      <span ref={firstWordRef}>{parentFirstWord}</span>
+                      {parentRest ? ` ${parentRest}` : ''}
+                    </>
+                  ) : (
+                    row.label
+                  )}
+                </span>
+              ))}
+            </div>
           </div>
           <span className="category-sheet__fact-table-divider" />
           <div className="category-sheet__fact-table-values">
-            {data.table.map((row) => (
-              <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW) }}>
-                {renderAmount(row.amount)}
-              </span>
-            ))}
+            <div className="category-sheet__fact-table-values-inner">
+              {data.table.map((row) => (
+                <span key={row.id} style={{ fontSize: fontPx(FACT_TABLE_VALUE_BASE_CQW) }}>
+                  {renderAmount(row.amount)}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -231,10 +310,15 @@ export default function CategorySheet({
     const voice = pickBestVoice(window.speechSynthesis.getVoices(), t.speechLang.split('-')[0])
 
     const factToSpeech = (fact) => `${fact.label} ${fact.amount}`
+    // The stat-row and fact-row are hardcoded dir="ltr" (matching the Figma layout
+    // order regardless of language), so their DOM order is always physically left-to-
+    // right. Narration should still follow natural reading order, so for RTL languages
+    // that means starting from the visually-rightmost (last) item.
+    const inReadingOrder = (list) => (dir === 'rtl' ? [...list].reverse() : list)
     const spokenBody = bodyNutrition
       ? [
-          ...bodyNutrition.cards.map(factToSpeech),
-          ...bodyNutrition.table.map(factToSpeech),
+          ...inReadingOrder(bodyNutrition.cards).map(factToSpeech),
+          ...inReadingOrder(bodyNutrition.table).map(factToSpeech),
           factToSpeech(bodyNutrition.sugarBox.sugar),
           factToSpeech(bodyNutrition.sugarBox.teaspoons),
         ].join(', ')
