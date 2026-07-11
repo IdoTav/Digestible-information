@@ -400,12 +400,17 @@
 }
 
 .category-sheet__fact-table {
-  flex: 0 0 55.1%;
+  flex: 0 0 50%;
   min-width: 0;
   height: 31.02cqw;
   display: flex;
   align-items: stretch;
-  justify-content: space-between;
+  /* space-between let the labels/divider/values spread out to fill any
+     leftover width, opening a huge gap around the divider — center the
+     (now tightly-gapped) group instead so the divider sits close to both
+     columns of text regardless of how much extra width the card has. */
+  justify-content: center;
+  gap: 4%;
   background: var(--sheet-bg);
   border: 1px solid var(--sheet-fg);
   border-radius: 15px;
@@ -499,7 +504,7 @@
 }
 
 .category-sheet__sugar-box {
-  flex: 0 0 42.1%;
+  flex: 0 0 47.2%;
   height: 31.02cqw;
   display: flex;
   background: #ff000e;
@@ -576,6 +581,11 @@
   font-weight: 400;
   text-align: start;
   transition: color 0.25s ease;
+  /* Without a cap, English/Arabic's longer wording (vs Hebrew) shrinks to
+     fill essentially the entire row before wrapping, leaving no free space
+     for the row's justify-content: center to actually center the group —
+     it just ends up spanning edge-to-edge instead. */
+  max-width: 50%;
 }
 
 .category-sheet__kosher-row-text p {
