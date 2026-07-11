@@ -50,7 +50,7 @@ export const translations = {
     kosherTitle: 'כשרות',
     kosherInfo: {
       dairyBadge: { top: 'כשר', bottom: 'חלבי' },
-      dairySupervision: { line1: 'חלב ישראל', line2: 'בהשגחת הרבנות נוף הגליל' },
+      dairySupervision: { line1: 'חלב ישראל', line2: 'בהשגחת הרבנות', line3: 'נוף הגליל' },
       ouDairy: { line1: 'Orthodox', line2Bold: 'Union', line2Light: '- Dairy' },
       rabbinicalSeal: { line1: 'חלבי', line2: 'חלב ישראל בהשגחה', line3: 'משעת חליבה' },
     },

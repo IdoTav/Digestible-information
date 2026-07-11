@@ -297,6 +297,7 @@ function KosherBody({ data, fontStep, iconScale }) {
     <div className="category-sheet__kosher-row-text" style={textStyle}>
       <p>{data.supervision.line1}</p>
       <p>{data.supervision.line2}</p>
+      {data.supervision.line3 && <p>{data.supervision.line3}</p>}
     </div>
   )
   // One-off text+swatch layout (not a repeatable icon), so it's rendered
@@ -543,7 +544,9 @@ export default function CategorySheet({
       : bodyKosher
       ? [
           `${bodyKosher.badge.top} ${bodyKosher.badge.bottom}`,
-          `${bodyKosher.supervision.line1} ${bodyKosher.supervision.line2}`,
+          [bodyKosher.supervision.line1, bodyKosher.supervision.line2, bodyKosher.supervision.line3]
+            .filter(Boolean)
+            .join(' '),
           // ouDairy uses line2Bold/line2Light instead of line2/line3 (see KosherBody's
           // rendering split below) — read those too, or its "Union - Dairy" half gets
           // silently dropped from speech.
