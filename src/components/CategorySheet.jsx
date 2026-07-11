@@ -54,7 +54,7 @@ const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
 // overflowed the sheet on first open (before any manual scrolling), so
 // everything here is scaled down from that 1:1 conversion, same idea as
 // nutrition's FACT_TABLE_FONT_SCALE.
-const KOSHER_SCALE = 0.62
+const KOSHER_SCALE = 0.85
 const KOSHER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 

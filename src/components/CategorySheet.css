@@ -50,11 +50,12 @@
   top: max(5vh, calc(100vh - 580px));
 }
 
-/* Kosher sheet has 3 stacked certification rows — a modest bump over the
-   default budget (ingredients/allergens), now that KOSHER_SCALE keeps the
-   content itself compact enough to fit without scrolling on open. */
+/* Kosher sheet has 3 stacked certification rows — sized to fit without
+   scrolling at fontStep 0 and to stay within reach up to the font stepper's
+   max (+3), which needs noticeably more room since KOSHER_SCALE is high
+   enough now to make the +3 step's larger text/icons overflow a tighter budget. */
 .category-sheet--kosher {
-  top: max(7vh, calc(100vh - 585px));
+  top: max(3vh, calc(100vh - 655px));
 }
 
 .category-sheet--high-contrast {
@@ -547,8 +548,8 @@
 .category-sheet__kosher-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 3.5%;
+  justify-content: flex-start;
+  gap: 3%;
 }
 
 .category-sheet__kosher-row-text {
