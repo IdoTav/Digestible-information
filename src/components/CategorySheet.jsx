@@ -62,7 +62,7 @@ const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 // simpler than kosher's 3 rows, so it starts at the raw Figma-to-cqw
 // conversion with only a small scale-up for a bit more presence (the sheet's
 // own height budget already accounts for this — see .category-sheet--manufacturer).
-const MANUFACTURER_SCALE = 1.4
+const MANUFACTURER_SCALE = 1.25
 const MANUFACTURER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * MANUFACTURER_SCALE
 
 // Storage body: a heading (rendered via the generic bodyHeading prop, same as
