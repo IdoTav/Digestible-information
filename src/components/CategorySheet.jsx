@@ -54,7 +54,7 @@ const FACT_TABLE_INDENTED_ROW_IDS = new Set(['transFat', 'cholesterol'])
 // overflowed the sheet on first open (before any manual scrolling), so
 // everything here is scaled down from that 1:1 conversion, same idea as
 // nutrition's FACT_TABLE_FONT_SCALE.
-const KOSHER_SCALE = 0.85
+const KOSHER_SCALE = 0.94
 const KOSHER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 
@@ -306,9 +306,23 @@ function KosherBody({ data, fontStep, iconScale }) {
       {data.rows.map((row) => {
         const text = (
           <div className="category-sheet__kosher-row-text" style={textStyle} dir={row.forceLtrText ? 'ltr' : undefined}>
-            <p>{row.line1}</p>
-            {row.line2 && <p>{row.line2}</p>}
-            {row.line3 && <p>{row.line3}</p>}
+            {row.line2Bold ? (
+              // "Orthodox Union" reads as the certifying body's name (bold),
+              // "- Dairy" is just the sub-designation (lighter) — Figma splits
+              // them across 2 lines with "Orthodox" alone on the first.
+              <>
+                <p style={{ fontWeight: 700 }}>{row.line1}</p>
+                <p>
+                  <span style={{ fontWeight: 700 }}>{row.line2Bold}</span> <span style={{ fontWeight: 400 }}>{row.line2Light}</span>
+                </p>
+              </>
+            ) : (
+              <>
+                <p>{row.line1}</p>
+                {row.line2 && <p>{row.line2}</p>}
+                {row.line3 && <p>{row.line3}</p>}
+              </>
+            )}
           </div>
         )
         const icon = (
