@@ -11,6 +11,7 @@ import { allergenIcons } from '../data/allergenIcons.js'
 import { nutritionStatCards, nutritionTableRowIds, nutritionSugarBoxIcons } from '../data/nutritionFacts.js'
 import { kosherRows, kosherBadgeSwatchColor } from '../data/kosherInfo.js'
 import { manufacturerBodyIcon } from '../data/manufacturerInfo.js'
+import { storageRows } from '../data/storageInfo.js'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import './HomeScreen.css'
 
@@ -20,7 +21,7 @@ const LANGUAGES = [
   { code: 'he', label: 'עברית', dir: 'rtl' },
 ]
 
-const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher', 'manufacturer'])
+const SHEET_CATEGORIES = new Set(['ingredients', 'allergens', 'nutrition', 'kosher', 'manufacturer', 'storage'])
 const primaryCategories = categories.filter((category) => category.group === 'primary')
 const secondaryCategories = categories.filter((category) => category.group === 'secondary')
 
@@ -243,6 +244,16 @@ export default function HomeScreen() {
           icon: manufacturerBodyIcon,
           producedBy: t.manufacturerInfo.producedBy,
           contact: t.manufacturerInfo.contact,
+        }}
+      />
+
+      <CategorySheet
+        open={openSheet === 'storage'}
+        onClose={() => setOpenSheet(null)}
+        title={t.storageTitle}
+        bodyHeading={t.storageInfo.heading}
+        bodyStorage={{
+          rows: storageRows.map((row) => ({ ...row, label: t.storageInfo.labels[row.id] })),
         }}
       />
 

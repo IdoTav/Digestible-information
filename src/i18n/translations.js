@@ -62,6 +62,11 @@ export const translations = {
       },
       contact: { label: 'ליצירת קשר:', detail: ['שירות לקוחות', 'שטראוס 6860*'] },
     },
+    storageTitle: 'הוראות אחסון',
+    storageInfo: {
+      heading: 'יש לשמור במקום:',
+      labels: { shaded: 'מוצל', cool: 'קריר', dry: 'יבש' },
+    },
     categories: {
       ingredients: 'רשימת הרכיבים',
       allergens: 'מידע על אלרגנים',
@@ -135,6 +140,11 @@ export const translations = {
       },
       contact: { label: 'For contact:', detail: ['Customer service', 'Strauss *6860'] },
     },
+    storageTitle: 'Storage instructions',
+    storageInfo: {
+      heading: 'Store in a place that is:',
+      labels: { shaded: 'Shaded', cool: 'Cool', dry: 'Dry' },
+    },
     categories: {
       ingredients: 'Ingredients list',
       allergens: 'Allergen info',
@@ -206,6 +216,11 @@ export const translations = {
         detail: ['شتراوس جروب المحدودة،', 'شارع مناحيم أرياف 10،', 'نوف هجليل.'],
       },
       contact: { label: 'للتواصل:', detail: ['خدمة عملاء', 'شتراوس 6860*'] },
+    },
+    storageTitle: 'تعليمات التخزين',
+    storageInfo: {
+      heading: 'يُحفظ في مكان:',
+      labels: { shaded: 'مظلل', cool: 'بارد', dry: 'جاف' },
     },
     categories: {
       ingredients: 'قائمة المكونات',

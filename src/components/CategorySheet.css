@@ -661,3 +661,40 @@
 .category-sheet--high-contrast .category-sheet__manufacturer-icon--invertible {
   filter: invert(1);
 }
+
+.category-sheet__storage {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  column-gap: 4%;
+  row-gap: 0.9em;
+  padding-top: 6px;
+}
+
+/* display: contents lets each row's icon/label become direct grid children of
+   .category-sheet__storage, so every icon lands in the same grid column
+   (aligned one beneath the other) no matter how wide that row's own icon is. */
+.category-sheet__storage-row {
+  display: contents;
+}
+
+.category-sheet__storage-label {
+  color: var(--sheet-fg);
+  font-weight: 400;
+  transition: color 0.25s ease;
+  justify-self: start;
+}
+
+.category-sheet__storage-icon {
+  display: block;
+  flex-shrink: 0;
+  justify-self: center;
+}
+
+/* Same black-line-art-on-transparent icons as kosher/manufacturer — invert in
+   high contrast so they stay visible against the sheet's black background. */
+.category-sheet--high-contrast .category-sheet__storage-icon--invertible {
+  filter: invert(1);
+}
