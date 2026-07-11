@@ -60,9 +60,10 @@ const KOSHER_BADGE_TEXT_BASE_CQW = 35.282 * FIGMA_PX_TO_CQW * KOSHER_SCALE
 
 // Manufacturer body: one icon + a two-pair (label/detail) text block — much
 // simpler than kosher's 3 rows, so it starts at the raw Figma-to-cqw
-// conversion with no extra scale-down (add one only if verification shows
-// overflow).
-const MANUFACTURER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW
+// conversion with only a small scale-up for a bit more presence (the sheet's
+// own height budget already accounts for this — see .category-sheet--manufacturer).
+const MANUFACTURER_SCALE = 1.15
+const MANUFACTURER_TEXT_BASE_CQW = 21 * FIGMA_PX_TO_CQW * MANUFACTURER_SCALE
 
 function NutritionBody({ data, fontStep, iconScale, dir }) {
   const fontPx = (baseCqw) => `calc(${baseCqw}cqw + ${fontStep * FONT_STEP_SIZE}px)`
@@ -381,8 +382,8 @@ function ManufacturerBody({ data, fontStep, iconScale }) {
           alt=""
           className={`category-sheet__manufacturer-icon${data.icon.invertOnHighContrast ? ' category-sheet__manufacturer-icon--invertible' : ''}`}
           style={{
-            width: `${data.icon.iconWidth * FIGMA_PX_TO_CQW * iconScale}cqw`,
-            height: `${data.icon.iconHeight * FIGMA_PX_TO_CQW * iconScale}cqw`,
+            width: `${data.icon.iconWidth * FIGMA_PX_TO_CQW * MANUFACTURER_SCALE * iconScale}cqw`,
+            height: `${data.icon.iconHeight * FIGMA_PX_TO_CQW * MANUFACTURER_SCALE * iconScale}cqw`,
           }}
         />
         <div className="category-sheet__manufacturer-text" style={textStyle}>

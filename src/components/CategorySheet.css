@@ -59,10 +59,10 @@
 }
 
 /* Manufacturer sheet's single icon+text row is short at fontStep 0 (fits the
-   default budget), but overflows by ~30px at the font stepper's max (+3) —
-   a small bump absorbs that without affecting ingredients/allergens. */
+   default budget), but overflows at the font stepper's max (+3) — a bump
+   absorbs that without affecting ingredients/allergens. */
 .category-sheet--manufacturer {
-  top: max(8vh, calc(100vh - 535px));
+  top: max(3vh, calc(100vh - 640px));
 }
 
 .category-sheet--high-contrast {
